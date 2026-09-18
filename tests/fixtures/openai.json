@@ -1,0 +1,15 @@
+{
+  "fixtures": [
+    {
+      "match": { "endpoint": "chat", "model": "gpt-4o", "userMessage": "capital of France", "hasToolResult": false },
+      "response": { "content": "The capital of France is Paris." }
+    },
+    {
+      "match": { "endpoint": "chat", "model": "gpt-4o", "systemMessage": "Think carefully before you answer", "userMessage": "best car to buy", "hasToolResult": false },
+      "response": {
+        "reasoning": "The user wants a car recommendation. I should consider reliability, value, fuel economy, and driving experience. Toyota Camry scores highest overall. Honda Civic is best for fuel economy. Mazda3 for driving feel.",
+        "content": "Based on my analysis, here are the top recommendations:\n\n1. **Toyota Camry** - Best overall value with excellent reliability\n2. **Honda Civic** - Great fuel economy and low maintenance costs\n3. **Mazda3** - Best driving experience in its class\n\nThe Toyota Camry stands out for its combination of reliability, resale value, and comfort."
+      }
+    }
+  ]
+}
