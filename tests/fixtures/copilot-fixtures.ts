@@ -1,6 +1,6 @@
 // Minimal extraction, not the cross-framework catch-alls in Dojo's aimock-setup.
-// Sources: https://github.com/ag-ui-protocol/ag-ui/tree/8665f1ee1aeb5fe7f873a850b20df9af0c4fbba2/apps/dojo/e2e/fixtures/openai
-// https://github.com/ag-ui-protocol/ag-ui/blob/8665f1ee1aeb5fe7f873a850b20df9af0c4fbba2/apps/dojo/e2e/aimock-setup.ts
+// Sources: https://github.com/ArlindNocaj/ag-ui/tree/8665f1ee1aeb5fe7f873a850b20df9af0c4fbba2/apps/dojo/e2e/fixtures/openai
+// https://github.com/ArlindNocaj/ag-ui/blob/8665f1ee1aeb5fe7f873a850b20df9af0c4fbba2/apps/dojo/e2e/aimock-setup.ts
 import { fileURLToPath } from "node:url";
 import type { ChatCompletionRequest, FixtureResponse, LLMock } from "@copilotkit/aimock";
 import { answer, baseName, currentState, guarded, MockError, turn } from "./helpers.js";
@@ -23,6 +23,63 @@ const recipe = {
 function respond(req: ChatCompletionRequest): FixtureResponse {
   if (req.model !== "gpt-4o") throw new MockError("The demo requires model gpt-4o.");
   const { messages, userIndex, user, last, tools, has, call, expectResult, system } = turn(req);
+  if (has("review_plan") || /fictional release\/support workbench/i.test(system)) {
+    if (last) {
+      const receipt = expectResult("review_plan").value;
+      if (!receipt?.nonce || !Array.isArray(receipt.accepted) || !Array.isArray(receipt.rejected)
+          || !Number.isInteger(receipt.revision)) throw new MockError("A real application approval receipt is required.");
+      return answer(`Recorded your explicit decisions at revision ${receipt.revision}, nonce ${receipt.nonce}.\n`
+        + receipt.accepted.map((action: { title: string; owner: string }) => `Approved: ${action.title} (${action.owner}).`).join("\n")
+        + `\nRejected action IDs: ${receipt.rejected.join(", ")}. Draft ${receipt.draftSaved ? "saved only" : "not saved"}; nothing sent.`);
+    }
+    const state = currentState(messages);
+    if (!["release", "support"].includes(state.workflow) || !Array.isArray(state.items)) {
+      throw new MockError("Showcases require authoritative workspace state.");
+    }
+    const release = state.workflow === "release";
+    if (/Propose a (wrong-workflow|unknown-target) plan for a recovery test/i.test(user)) {
+      return call("review_plan", {
+        chart: "bars", metric: /wrong-workflow/i.test(user) ? "failure-rate" : "age-distribution",
+        group: /wrong-workflow/i.test(user) ? "product" : "owner", filter: "open",
+        rationale: "Deliberately invalid fixture for fail-closed recovery testing.", draft: "",
+        actions: [{ id: "invalid-action", target: /unknown-target/i.test(user) ? "NOT-A-TICKET" : "SUP-BLA-03",
+          kind: "assign", title: "Invalid recovery test", owner: "Avery" }],
+      });
+    }
+    if (/No tools.*Read fresh authoritative state/is.test(user)) {
+      const target = release ? "REL-CAT-01" : "SUP-BLA-03";
+      const item = state.items.find((item: { id: string }) => item.id === target);
+      const work = state.work.find((work: { target: string }) => work.target === target);
+      if (!item || !work || !state.receipts.length) throw new MockError("Follow-up requires committed authoritative work.");
+      return answer(`${target}: ${item.status}; ${release ? "task" : "ticket"} owner ${release ? work.owner : item.owner}. `
+        + `Revision ${state.revision}; metric=${state.view.metric}, filter=${state.view.filter}. `
+        + `Rejected action IDs: ${state.receipts.at(-1).rejected.join(", ")}. `
+        + (release
+          ? `Historical failures/attempts remain ${state.items.reduce((sum: number, item: { failedBuilds: number }) => sum + item.failedBuilds, 0)}/${state.items.reduce((sum: number, item: { buildAttempts: number }) => sum + item.buildAttempts, 0)}; completion does not erase history.`
+          : `Current totals: ${state.computedTotals.count} open, ${state.computedTotals.ageHoursSum} age-hours, ${state.computedTotals.overdue} breaches. Reassignment conserved totals; resolution removed this ticket. Saved draft: "${state.draft}". Nothing was sent.`));
+    }
+    if (/Propose exactly three/i.test(user)) {
+      const targets = release ? ["REL-CAT-01", "REL-CAT-02", "REL-PAY-01"] : ["SUP-BLA-03", "SUP-BLA-04", "SUP-DAN-04"];
+      if (targets.some(target => !state.items.some((item: { id: string; status: string }) => item.id === target && item.status === "open"))) {
+        throw new MockError("Proposal targets must be open in the current workspace.");
+      }
+      return call("review_plan", {
+        chart: "bars", metric: release ? "failure-rate" : "age-distribution",
+        group: release ? "product" : "owner", filter: release ? "urgent" : "open",
+        rationale: release
+          ? "The urgent slice changes the investigation ranking. Review the denominators before deciding whether Payments prioritization needs more evidence."
+          : "Equal counts hide an older age tail while urgent breaches point elsewhere. Review owners individually; reassignment is not resolution or evidence of spare capacity.",
+        actions: targets.map((target, index) => ({
+          id: `action-${index + 1}`, target,
+          kind: release ? "task" : index === 2 ? "escalate" : "assign",
+          title: `${release ? "Investigate" : index === 2 ? "Escalate" : "Assign investigation for"} ${target}`,
+          owner: index === 0 ? "Avery" : index === 1 ? "Casey" : "Blair",
+        })),
+        draft: release ? "" : "We are reviewing this fictional ticket. Next update tomorrow. No fix or assignment is confirmed yet.",
+      });
+    }
+    throw new MockError("Use the showcase proposal or authoritative follow-up example.");
+  }
   if (has("get_weather") || /Weather Assistant/i.test(system)) {
     if (last) {
       const result = expectResult("get_weather");
@@ -49,12 +106,12 @@ function respond(req: ChatCompletionRequest): FixtureResponse {
       expectResult("generate_recipe");
       return answer("I've completed your pasta recipe with all ingredients and cooking instructions.");
     }
+    if (/pasta recipe/i.test(user)) return call("generate_recipe", { recipe });
     if (/ingredients/i.test(user)) {
       const ingredients = currentState(messages).recipe?.ingredients;
       if (!Array.isArray(ingredients)) throw new MockError("Ingredient follow-up requires injected shared recipe state.");
       return answer(`Here are the ingredients from your current recipe:\n${ingredients.map((item) => `- ${item.name}: ${item.amount}`).join("\n")}`);
     }
-    if (/pasta recipe/i.test(user)) return call("generate_recipe", { recipe });
   }
   if (has("write_document") || /assistant for writing documents/i.test(system)) {
     if (last) {
@@ -66,7 +123,6 @@ function respond(req: ChatCompletionRequest): FixtureResponse {
           || result.value?.approved === true) return answer("The document changes were accepted and applied.");
       throw new MockError("Document result contained no approval/rejection decision.");
     }
-    if (/dragon called Atlantis/i.test(user)) return call("write_document", { document: story });
     if (/dragon name to Lola|(?:change|rename|replace|edit).*Lola/i.test(user)) {
       const document = currentState(messages).document;
       if (typeof document !== "string" || !document.includes("Atlantis")) {
@@ -74,6 +130,7 @@ function respond(req: ChatCompletionRequest): FixtureResponse {
       }
       return call("write_document", { document: document.replaceAll("Atlantis", "Lola") });
     }
+    if (/dragon called Atlantis/i.test(user)) return call("write_document", { document: story });
   }
   if (has("generate_task_steps")) {
     const human = /task planning assistant|human review and approval/i.test(system)
@@ -125,6 +182,8 @@ function respond(req: ChatCompletionRequest): FixtureResponse {
 export function registerCopilotFixtures(mock: LLMock, log?: (message: string) => void) {
   // Only the two relevant static fixtures, not Dojo's unrelated integrations.
   mock.loadFixtureFile(fileURLToPath(new URL("./openai.json", import.meta.url)));
+  const reasoning = mock.getFixtures().find((fixture) => fixture.match.userMessage === "best car to buy")!;
+  mock.addFixture({ ...reasoning, match: { ...reasoning.match, userMessage: /recommend.*car/i } });
   mock.addFixture({ match: { endpoint: "chat" }, response: guarded(respond, log) });
   registerDeepagentsSubagentsFixtures(mock, log);
   registerCopilotSdkSubgraphsFixtures(mock, log);

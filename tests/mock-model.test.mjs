@@ -1,9 +1,11 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { readFileSync } from "node:fs";
 import { matchFixture } from "@copilotkit/aimock";
 import { createMockServer } from "../scripts/mock-model.ts";
+import { initialState, aggregate, chartTotals } from "../shared/domain.ts";
 
-const fixtures = createMockServer({ log: () => {} }).getFixtures();
+const fixtures = createMockServer({ port: 0, log: () => {} }).getFixtures();
 function resolveCompletion(req) {
   const fixture = matchFixture([...fixtures], { ...req, _endpointType: "chat" });
   assert.ok(fixture);
@@ -19,6 +21,12 @@ const request = (system, user, names = []) => ({
   tools: names.map((name) => tool(name)),
 });
 const args = (result) => JSON.parse(result.toolCalls[0].arguments);
+test("Python packaged workbench data stays identical to shared frontend and TypeScript data", () => {
+  for (const file of ["fixtures.json", "contracts.json", "instructions.txt"]) {
+    assert.equal(readFileSync(new URL(`../backend/python/showcase_data/${file}`, import.meta.url), "utf8"),
+      readFileSync(new URL(`../shared/${file}`, import.meta.url), "utf8"));
+  }
+});
 function finish(req, name, value, callArgs = {}) {
   const id = `call_${req.messages.length}`;
   req.messages.push({ role: "assistant", content: null, tool_calls: [{
@@ -28,7 +36,7 @@ function finish(req, name, value, callArgs = {}) {
 }
 
 test("twelve feature entry points use declared tools, not fabricated adapter events", () => {
-  assert.match(resolveCompletion(request("Helpful assistant.", "What is the capital of France?")).content, /Paris/);
+  assert.match(resolveCompletion(request("You are a helpful assistant. Use declared tools when requested.", "What is the capital of France?")).content, /Paris/);
   const weather = request("You are a helpful Weather Assistant.", "Weather in San Francisco", ["get_weather"]);
   assert.deepEqual(args(resolveCompletion(weather)), { location: "San Francisco" });
   assert.match(resolveCompletion(finish(weather, "get_weather", { temperature: 20, conditions: "sunny" })).content, /sunny, 20°C/);
@@ -52,6 +60,7 @@ test("twelve feature entry points use declared tools, not fabricated adapter eve
   const reasoning = resolveCompletion(request("Think carefully before you answer.", "What is the best car to buy?"));
   assert.match(reasoning.content, /Toyota/);
   assert.ok(reasoning.reasoning);
+  assert.match(resolveCompletion(request("Think carefully before you answer.", "Recommend a car")).content, /Toyota/);
   assert.match(resolveCompletion(request("Analyze images.", [
     { type: "text", text: "What do you see in this image?" },
     { type: "image_url", image_url: { url: "data:image/png;base64,aGVsbG8=" } },
@@ -92,6 +101,39 @@ test("document edits preserve the supplied document; approval and rejection diff
   assert.match(resolveCompletion(finish(approved, "write_document", "User approved the changes.")).content, /accepted/);
   assert.match(resolveCompletion(finish(rejected, "write_document", { approved: false })).content, /unchanged/);
   assert.throws(() => resolveCompletion(request("Assistant for writing documents.", "Change dragon name to Lola", ["write_document"])), /current Atlantis/);
+});
+
+test("adapter state preambles cannot match old intent or field names", () => {
+  const wrap = (state, prompt) => `## Current shared state\n\`\`\`json\n${JSON.stringify(state, null, 2)}\n\`\`\`\n\n${prompt}`;
+  const recipe = request("Helpful recipe assistant.", wrap({ recipe: { ingredients: [] } }, 'Please give me a pasta recipe with an ingredient called "Pasta"'), ["generate_recipe"]);
+  assert.equal(resolveCompletion(recipe).toolCalls[0].name, "generate_recipe");
+  const document = request("Assistant for writing documents.", wrap({ document: "A dragon called Atlantis." }, "Change dragon name to Lola"), ["write_document"]);
+  assert.equal(args(resolveCompletion(document)).document, "A dragon called Lola.");
+});
+
+test("rich proposals and follow-ups use real receipts and current authoritative state", () => {
+  for (const workflow of ["release", "support"]) {
+    const state = initialState(workflow);
+    const req = request("You assist in a fictional release/support workbench.", `## Current shared state\n\`\`\`json\n${JSON.stringify(state)}\n\`\`\`\nPropose exactly three fictional actions.`, ["review_plan"]);
+    const plan = args(resolveCompletion(req));
+    assert.equal(plan.actions.length, 3);
+    assert.equal(plan.metric, workflow === "release" ? "failure-rate" : "age-distribution");
+    const receipt = { nonce: "actual-app-nonce", revision: 2, accepted: [{ title: "Edited by user", owner: "Dana" }], rejected: ["action-3"], draftSaved: workflow === "support" };
+    assert.match(resolveCompletion(finish(req, "review_plan", receipt)).content, /Edited by user \(Dana\)/);
+    const target = plan.actions[0].target;
+    state.items.find(item => item.id === target).status = "done";
+    state.work = [{ ...plan.actions[0], owner: "Dana", status: "done" }];
+    state.receipts = [receipt];
+    state.revision = 3;
+    state.draft = "User-edited saved reply.";
+    state.computedTotals = chartTotals(aggregate(state));
+    req.messages.push({ role: "user", content: `## Current shared state\n\`\`\`json\n${JSON.stringify(state)}\n\`\`\`\nNo tools. Read fresh authoritative state.` });
+    const reply = resolveCompletion(req).content;
+    assert.ok(reply.includes(`${target}: done`));
+    assert.match(reply, /Revision 3/);
+    if (workflow === "support") assert.match(reply, /31 open, 501 age-hours, 9 breaches.*User-edited saved reply/);
+    else assert.match(reply, /95\/840/);
+  }
 });
 
 test("human selections and scheduling never turn rejections into confirmations", () => {
@@ -176,7 +218,7 @@ test("HTTP health, OpenAI JSON/SSE, chunked arguments, reasoning, and redacted e
     body: JSON.stringify(body),
   });
   assert.equal((await (await fetch(`${base}/health`)).json()).status, "ok");
-  const plain = await post(request("Helpful assistant.", "What is the capital of France?"));
+  const plain = await post(request("You are a helpful assistant. Use declared tools when requested.", "What is the capital of France?"));
   const completion = await plain.json();
   assert.equal(completion.object, "chat.completion");
   assert.equal(completion.choices[0].finish_reason, "stop");

@@ -12,9 +12,9 @@
     "dev:mock": "node scripts/dev.mjs all --mock",
     "build": "pnpm --dir backend/typescript build && pnpm --dir frontend build",
     "typecheck": "pnpm --dir backend/typescript typecheck && pnpm --dir frontend typecheck",
-    "test": "pnpm typecheck && pnpm --dir backend/typescript test && node --test tests/*.test.mjs && pnpm test:python && pnpm build",
+    "test": "pnpm typecheck && pnpm --dir backend/typescript test && node --import tsx --test tests/*.test.mjs && pnpm test:python && pnpm build",
     "test:python": "uv lock --project backend/python --check --offline --default-index https://pypi.org/simple && uv run --project backend/python --extra server --locked --default-index https://pypi.org/simple pytest backend/python/tests && uv run --project backend/python --locked --default-index https://pypi.org/simple ruff check backend/python && uv build --project backend/python",
-    "test:e2e": "playwright test",
+    "test:e2e": "pnpm build && playwright test",
     "test:live": "node scripts/live-smoke.mjs"
   },
   "devDependencies": {

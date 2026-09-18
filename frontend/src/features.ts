@@ -15,4 +15,5 @@ export const features = {
 export type Feature = keyof typeof features;
 export type Backend = "typescript" | "python";
 export function isFeature(value: string): value is Feature { return Object.hasOwn(features, value); }
+export function isAgent(value: string) { return isFeature(value) || value === "release_readiness" || value === "support_triage"; }
 export function isBackend(value: string): value is Backend { return value === "python" || value === "typescript"; }

@@ -9,8 +9,9 @@ from urllib.parse import urlsplit
 import uvicorn
 from ag_ui.core import RunAgentInput
 from copilot import CopilotClient
-from fastapi import Depends, FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
+from jsonschema import ValidationError
 from starlette.types import ASGIApp, Receive, Scope, Send
 
 from ag_ui_copilot_sdk import add_copilot_fastapi_endpoint
@@ -26,6 +27,9 @@ from agents.predictive_state_updates import create_predictive_state_updates_agen
 from agents.shared_state import create_shared_state_agent
 from agents.subgraphs import create_subgraphs_agent
 from agents.tool_based_generative_ui import create_tool_based_generative_ui_agent
+from showcase_domain import Conflict, Store
+from showcases import NAMES as SHOWCASE_NAMES
+from showcases import register_showcases
 
 MAX_BODY_BYTES = 4 * 1024 * 1024
 LOOPBACK_HOSTS = ("127.0.0.1", "localhost", "::1")
@@ -50,12 +54,12 @@ def settings() -> tuple[str, int, str]:
     if host not in LOOPBACK_HOSTS:
         raise ValueError("HOST must be 127.0.0.1, localhost, or ::1; this demo is local-only.")
     try:
-        port = int(os.getenv("PORT", "8027"))
+        port = int(os.getenv("PORT", "8227"))
     except ValueError as exc:
         raise ValueError("PORT must be an integer between 1 and 65535.") from exc
     if not 1 <= port <= 65535:
         raise ValueError("PORT must be an integer between 1 and 65535.")
-    origin = os.getenv("FRONTEND_ORIGIN", "http://127.0.0.1:3000")
+    origin = os.getenv("FRONTEND_ORIGIN", "http://127.0.0.1:3310")
     parsed = urlsplit(origin)
     if (
         parsed.scheme not in ("http", "https")
@@ -191,6 +195,7 @@ async def lifespan(app: FastAPI):
                 path=f"/{name}",
                 dependencies=[Depends(validate_run_input)],
             )
+        register_showcases(app, client, agents, validate_run_input)
         app.state.agents = agents
         yield
     finally:
@@ -206,7 +211,26 @@ def create_app() -> FastAPI:
     app = FastAPI(title="Standalone Copilot SDK demo", lifespan=lifespan)
     app.state.host = host
     app.state.port = port
+    app.state.workbench = Store()
     app.add_middleware(LocalRequestBoundary, port=port, origin=origin)
+
+    @app.exception_handler(Conflict)
+    async def conflict(_request, error):
+        return JSONResponse({"error": str(error), "code": error.code}, status_code=error.status)
+
+    @app.exception_handler(ValidationError)
+    async def invalid(_request, _error):
+        return JSONResponse(
+            {"error": "Invalid workbench contract", "code": "INVALID_CONTRACT"}, status_code=400
+        )
+
+    @app.post("/workbench")
+    async def workbench(request: Request):
+        try:
+            payload = await request.json()
+        except ValueError as error:
+            raise HTTPException(400, "Invalid JSON") from error
+        return app.state.workbench.execute(payload)
 
     @app.get("/health")
     async def health():
@@ -215,7 +239,7 @@ def create_app() -> FastAPI:
             "status": "healthy",
             "backend": "python",
             "mode": "byok" if os.getenv("OPENAI_BASE_URL") else "copilot",
-            "agents": list(AGENT_FACTORIES),
+            "agents": [*AGENT_FACTORIES, *SHOWCASE_NAMES],
         }
 
     return app

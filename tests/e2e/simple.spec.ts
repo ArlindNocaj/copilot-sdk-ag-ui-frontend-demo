@@ -23,7 +23,7 @@ for (const backend of ["typescript", "python"] as const) {
         const errors: string[] = [];
         page.on("pageerror", error => errors.push(error.message));
         await page.goto(`/features/${feature}?backend=${backend}`);
-        await expect(page.getByRole("heading", { level: 1 })).toHaveText(features[feature][0]);
+        await expect(page.getByRole("heading", { level: 1, name: features[feature][0], exact: true })).toBeVisible();
         await ready(page);
         if (feature === "agentic_chat_multimodal") {
           // A real inline attachment crosses CopilotKit -> AG-UI -> SDK -> model.

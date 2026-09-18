@@ -1,0 +1,1275 @@
+{
+  "plan": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "properties": {
+      "chart": {
+        "type": "string",
+        "enum": [
+          "bars",
+          "table"
+        ]
+      },
+      "metric": {
+        "type": "string",
+        "enum": [
+          "failures",
+          "failure-rate",
+          "open-tickets",
+          "age-distribution",
+          "overdue-tickets"
+        ]
+      },
+      "group": {
+        "type": "string",
+        "enum": [
+          "product",
+          "priority",
+          "owner"
+        ]
+      },
+      "filter": {
+        "type": "string",
+        "enum": [
+          "all",
+          "urgent",
+          "open"
+        ]
+      },
+      "rationale": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 700
+      },
+      "actions": {
+        "minItems": 1,
+        "maxItems": 6,
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 160,
+              "pattern": "^[a-zA-Z0-9_:.-]+$"
+            },
+            "target": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 160,
+              "pattern": "^[a-zA-Z0-9_:.-]+$"
+            },
+            "kind": {
+              "type": "string",
+              "enum": [
+                "task",
+                "assign",
+                "follow-up",
+                "escalate"
+              ]
+            },
+            "title": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 180
+            },
+            "owner": {
+              "type": "string",
+              "enum": [
+                "Avery",
+                "Blair",
+                "Casey",
+                "Dana"
+              ]
+            }
+          },
+          "required": [
+            "id",
+            "target",
+            "kind",
+            "title",
+            "owner"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "draft": {
+        "type": "string",
+        "maxLength": 2000
+      }
+    },
+    "required": [
+      "chart",
+      "metric",
+      "group",
+      "filter",
+      "rationale",
+      "actions",
+      "draft"
+    ],
+    "additionalProperties": false,
+    "anyOf": [
+      {
+        "type": "object",
+        "properties": {
+          "chart": {
+            "type": "string",
+            "enum": [
+              "bars",
+              "table"
+            ]
+          },
+          "metric": {
+            "type": "string",
+            "enum": [
+              "failures",
+              "failure-rate"
+            ]
+          },
+          "group": {
+            "type": "string",
+            "enum": [
+              "product",
+              "priority"
+            ]
+          },
+          "filter": {
+            "type": "string",
+            "enum": [
+              "all",
+              "urgent",
+              "open"
+            ]
+          },
+          "rationale": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 700
+          },
+          "actions": {
+            "minItems": 1,
+            "maxItems": 6,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 160,
+                  "pattern": "^[a-zA-Z0-9_:.-]+$"
+                },
+                "target": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 160,
+                  "pattern": "^[a-zA-Z0-9_:.-]+$"
+                },
+                "kind": {
+                  "type": "string",
+                  "enum": [
+                    "task",
+                    "assign",
+                    "follow-up",
+                    "escalate"
+                  ]
+                },
+                "title": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 180
+                },
+                "owner": {
+                  "type": "string",
+                  "enum": [
+                    "Avery",
+                    "Blair",
+                    "Casey",
+                    "Dana"
+                  ]
+                }
+              },
+              "required": [
+                "id",
+                "target",
+                "kind",
+                "title",
+                "owner"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "draft": {
+            "type": "string",
+            "maxLength": 2000
+          }
+        },
+        "required": [
+          "chart",
+          "metric",
+          "group",
+          "filter",
+          "rationale",
+          "actions",
+          "draft"
+        ],
+        "additionalProperties": false
+      },
+      {
+        "type": "object",
+        "properties": {
+          "chart": {
+            "type": "string",
+            "enum": [
+              "bars",
+              "table"
+            ]
+          },
+          "metric": {
+            "type": "string",
+            "enum": [
+              "open-tickets",
+              "age-distribution",
+              "overdue-tickets"
+            ]
+          },
+          "group": {
+            "type": "string",
+            "enum": [
+              "owner",
+              "priority"
+            ]
+          },
+          "filter": {
+            "type": "string",
+            "enum": [
+              "urgent",
+              "open"
+            ]
+          },
+          "rationale": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 700
+          },
+          "actions": {
+            "minItems": 1,
+            "maxItems": 6,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 160,
+                  "pattern": "^[a-zA-Z0-9_:.-]+$"
+                },
+                "target": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 160,
+                  "pattern": "^[a-zA-Z0-9_:.-]+$"
+                },
+                "kind": {
+                  "type": "string",
+                  "enum": [
+                    "task",
+                    "assign",
+                    "follow-up",
+                    "escalate"
+                  ]
+                },
+                "title": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 180
+                },
+                "owner": {
+                  "type": "string",
+                  "enum": [
+                    "Avery",
+                    "Blair",
+                    "Casey",
+                    "Dana"
+                  ]
+                }
+              },
+              "required": [
+                "id",
+                "target",
+                "kind",
+                "title",
+                "owner"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "draft": {
+            "type": "string",
+            "maxLength": 2000
+          }
+        },
+        "required": [
+          "chart",
+          "metric",
+          "group",
+          "filter",
+          "rationale",
+          "actions",
+          "draft"
+        ],
+        "additionalProperties": false
+      }
+    ]
+  },
+  "view": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "anyOf": [
+      {
+        "type": "object",
+        "properties": {
+          "chart": {
+            "type": "string",
+            "enum": [
+              "bars",
+              "table"
+            ]
+          },
+          "metric": {
+            "type": "string",
+            "enum": [
+              "failures",
+              "failure-rate"
+            ]
+          },
+          "group": {
+            "type": "string",
+            "enum": [
+              "product",
+              "priority"
+            ]
+          },
+          "filter": {
+            "type": "string",
+            "enum": [
+              "all",
+              "urgent",
+              "open"
+            ]
+          }
+        },
+        "required": [
+          "chart",
+          "metric",
+          "group",
+          "filter"
+        ],
+        "additionalProperties": false
+      },
+      {
+        "type": "object",
+        "properties": {
+          "chart": {
+            "type": "string",
+            "enum": [
+              "bars",
+              "table"
+            ]
+          },
+          "metric": {
+            "type": "string",
+            "enum": [
+              "open-tickets",
+              "age-distribution",
+              "overdue-tickets"
+            ]
+          },
+          "group": {
+            "type": "string",
+            "enum": [
+              "owner",
+              "priority"
+            ]
+          },
+          "filter": {
+            "type": "string",
+            "enum": [
+              "urgent",
+              "open"
+            ]
+          }
+        },
+        "required": [
+          "chart",
+          "metric",
+          "group",
+          "filter"
+        ],
+        "additionalProperties": false
+      }
+    ]
+  },
+  "tool": {
+    "name": "review_plan",
+    "description": "Choose a valid workflow metric/group/scope and propose editable fictional work. Rationale: two sentences under 450 characters (hard limit 700). Always include draft, empty string for release. Wait for the real receipt. Drafts are save only.",
+    "parameters": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "chart": {
+          "type": "string",
+          "enum": [
+            "bars",
+            "table"
+          ]
+        },
+        "metric": {
+          "type": "string",
+          "enum": [
+            "failures",
+            "failure-rate",
+            "open-tickets",
+            "age-distribution",
+            "overdue-tickets"
+          ]
+        },
+        "group": {
+          "type": "string",
+          "enum": [
+            "product",
+            "priority",
+            "owner"
+          ]
+        },
+        "filter": {
+          "type": "string",
+          "enum": [
+            "all",
+            "urgent",
+            "open"
+          ]
+        },
+        "rationale": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 700
+        },
+        "actions": {
+          "minItems": 1,
+          "maxItems": 6,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 160,
+                "pattern": "^[a-zA-Z0-9_:.-]+$"
+              },
+              "target": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 160,
+                "pattern": "^[a-zA-Z0-9_:.-]+$"
+              },
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "task",
+                  "assign",
+                  "follow-up",
+                  "escalate"
+                ]
+              },
+              "title": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 180
+              },
+              "owner": {
+                "type": "string",
+                "enum": [
+                  "Avery",
+                  "Blair",
+                  "Casey",
+                  "Dana"
+                ]
+              }
+            },
+            "required": [
+              "id",
+              "target",
+              "kind",
+              "title",
+              "owner"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "draft": {
+          "type": "string",
+          "maxLength": 2000
+        }
+      },
+      "required": [
+        "chart",
+        "metric",
+        "group",
+        "filter",
+        "rationale",
+        "actions",
+        "draft"
+      ],
+      "additionalProperties": false,
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {
+            "chart": {
+              "type": "string",
+              "enum": [
+                "bars",
+                "table"
+              ]
+            },
+            "metric": {
+              "type": "string",
+              "enum": [
+                "failures",
+                "failure-rate"
+              ]
+            },
+            "group": {
+              "type": "string",
+              "enum": [
+                "product",
+                "priority"
+              ]
+            },
+            "filter": {
+              "type": "string",
+              "enum": [
+                "all",
+                "urgent",
+                "open"
+              ]
+            },
+            "rationale": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 700
+            },
+            "actions": {
+              "minItems": 1,
+              "maxItems": 6,
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 160,
+                    "pattern": "^[a-zA-Z0-9_:.-]+$"
+                  },
+                  "target": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 160,
+                    "pattern": "^[a-zA-Z0-9_:.-]+$"
+                  },
+                  "kind": {
+                    "type": "string",
+                    "enum": [
+                      "task",
+                      "assign",
+                      "follow-up",
+                      "escalate"
+                    ]
+                  },
+                  "title": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 180
+                  },
+                  "owner": {
+                    "type": "string",
+                    "enum": [
+                      "Avery",
+                      "Blair",
+                      "Casey",
+                      "Dana"
+                    ]
+                  }
+                },
+                "required": [
+                  "id",
+                  "target",
+                  "kind",
+                  "title",
+                  "owner"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "draft": {
+              "type": "string",
+              "maxLength": 2000
+            }
+          },
+          "required": [
+            "chart",
+            "metric",
+            "group",
+            "filter",
+            "rationale",
+            "actions",
+            "draft"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "chart": {
+              "type": "string",
+              "enum": [
+                "bars",
+                "table"
+              ]
+            },
+            "metric": {
+              "type": "string",
+              "enum": [
+                "open-tickets",
+                "age-distribution",
+                "overdue-tickets"
+              ]
+            },
+            "group": {
+              "type": "string",
+              "enum": [
+                "owner",
+                "priority"
+              ]
+            },
+            "filter": {
+              "type": "string",
+              "enum": [
+                "urgent",
+                "open"
+              ]
+            },
+            "rationale": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 700
+            },
+            "actions": {
+              "minItems": 1,
+              "maxItems": 6,
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 160,
+                    "pattern": "^[a-zA-Z0-9_:.-]+$"
+                  },
+                  "target": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 160,
+                    "pattern": "^[a-zA-Z0-9_:.-]+$"
+                  },
+                  "kind": {
+                    "type": "string",
+                    "enum": [
+                      "task",
+                      "assign",
+                      "follow-up",
+                      "escalate"
+                    ]
+                  },
+                  "title": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 180
+                  },
+                  "owner": {
+                    "type": "string",
+                    "enum": [
+                      "Avery",
+                      "Blair",
+                      "Casey",
+                      "Dana"
+                    ]
+                  }
+                },
+                "required": [
+                  "id",
+                  "target",
+                  "kind",
+                  "title",
+                  "owner"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "draft": {
+              "type": "string",
+              "maxLength": 2000
+            }
+          },
+          "required": [
+            "chart",
+            "metric",
+            "group",
+            "filter",
+            "rationale",
+            "actions",
+            "draft"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    }
+  },
+  "command": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "oneOf": [
+      {
+        "type": "object",
+        "properties": {
+          "threadId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160,
+            "pattern": "^[a-zA-Z0-9_:.-]+$"
+          },
+          "op": {
+            "type": "string",
+            "const": "init"
+          },
+          "workflow": {
+            "type": "string",
+            "enum": [
+              "release",
+              "support"
+            ]
+          }
+        },
+        "required": [
+          "threadId",
+          "op",
+          "workflow"
+        ],
+        "additionalProperties": false
+      },
+      {
+        "type": "object",
+        "properties": {
+          "threadId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160,
+            "pattern": "^[a-zA-Z0-9_:.-]+$"
+          },
+          "op": {
+            "type": "string",
+            "const": "read"
+          }
+        },
+        "required": [
+          "threadId",
+          "op"
+        ],
+        "additionalProperties": false
+      },
+      {
+        "type": "object",
+        "properties": {
+          "threadId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160,
+            "pattern": "^[a-zA-Z0-9_:.-]+$"
+          },
+          "op": {
+            "type": "string",
+            "const": "stage"
+          },
+          "toolCallId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160,
+            "pattern": "^[a-zA-Z0-9_:.-]+$"
+          },
+          "plan": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "chart": {
+                    "type": "string",
+                    "enum": [
+                      "bars",
+                      "table"
+                    ]
+                  },
+                  "metric": {
+                    "type": "string",
+                    "enum": [
+                      "failures",
+                      "failure-rate"
+                    ]
+                  },
+                  "group": {
+                    "type": "string",
+                    "enum": [
+                      "product",
+                      "priority"
+                    ]
+                  },
+                  "filter": {
+                    "type": "string",
+                    "enum": [
+                      "all",
+                      "urgent",
+                      "open"
+                    ]
+                  },
+                  "rationale": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 700
+                  },
+                  "actions": {
+                    "minItems": 1,
+                    "maxItems": 6,
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 160,
+                          "pattern": "^[a-zA-Z0-9_:.-]+$"
+                        },
+                        "target": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 160,
+                          "pattern": "^[a-zA-Z0-9_:.-]+$"
+                        },
+                        "kind": {
+                          "type": "string",
+                          "enum": [
+                            "task",
+                            "assign",
+                            "follow-up",
+                            "escalate"
+                          ]
+                        },
+                        "title": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 180
+                        },
+                        "owner": {
+                          "type": "string",
+                          "enum": [
+                            "Avery",
+                            "Blair",
+                            "Casey",
+                            "Dana"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "target",
+                        "kind",
+                        "title",
+                        "owner"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "draft": {
+                    "type": "string",
+                    "maxLength": 2000
+                  }
+                },
+                "required": [
+                  "chart",
+                  "metric",
+                  "group",
+                  "filter",
+                  "rationale",
+                  "actions",
+                  "draft"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "chart": {
+                    "type": "string",
+                    "enum": [
+                      "bars",
+                      "table"
+                    ]
+                  },
+                  "metric": {
+                    "type": "string",
+                    "enum": [
+                      "open-tickets",
+                      "age-distribution",
+                      "overdue-tickets"
+                    ]
+                  },
+                  "group": {
+                    "type": "string",
+                    "enum": [
+                      "owner",
+                      "priority"
+                    ]
+                  },
+                  "filter": {
+                    "type": "string",
+                    "enum": [
+                      "urgent",
+                      "open"
+                    ]
+                  },
+                  "rationale": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 700
+                  },
+                  "actions": {
+                    "minItems": 1,
+                    "maxItems": 6,
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 160,
+                          "pattern": "^[a-zA-Z0-9_:.-]+$"
+                        },
+                        "target": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 160,
+                          "pattern": "^[a-zA-Z0-9_:.-]+$"
+                        },
+                        "kind": {
+                          "type": "string",
+                          "enum": [
+                            "task",
+                            "assign",
+                            "follow-up",
+                            "escalate"
+                          ]
+                        },
+                        "title": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 180
+                        },
+                        "owner": {
+                          "type": "string",
+                          "enum": [
+                            "Avery",
+                            "Blair",
+                            "Casey",
+                            "Dana"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "target",
+                        "kind",
+                        "title",
+                        "owner"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "draft": {
+                    "type": "string",
+                    "maxLength": 2000
+                  }
+                },
+                "required": [
+                  "chart",
+                  "metric",
+                  "group",
+                  "filter",
+                  "rationale",
+                  "actions",
+                  "draft"
+                ],
+                "additionalProperties": false
+              }
+            ]
+          }
+        },
+        "required": [
+          "threadId",
+          "op",
+          "toolCallId",
+          "plan"
+        ],
+        "additionalProperties": false
+      },
+      {
+        "type": "object",
+        "properties": {
+          "threadId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160,
+            "pattern": "^[a-zA-Z0-9_:.-]+$"
+          },
+          "op": {
+            "type": "string",
+            "const": "view"
+          },
+          "expectedRevision": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "view": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "chart": {
+                    "type": "string",
+                    "enum": [
+                      "bars",
+                      "table"
+                    ]
+                  },
+                  "metric": {
+                    "type": "string",
+                    "enum": [
+                      "failures",
+                      "failure-rate"
+                    ]
+                  },
+                  "group": {
+                    "type": "string",
+                    "enum": [
+                      "product",
+                      "priority"
+                    ]
+                  },
+                  "filter": {
+                    "type": "string",
+                    "enum": [
+                      "all",
+                      "urgent",
+                      "open"
+                    ]
+                  }
+                },
+                "required": [
+                  "chart",
+                  "metric",
+                  "group",
+                  "filter"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "chart": {
+                    "type": "string",
+                    "enum": [
+                      "bars",
+                      "table"
+                    ]
+                  },
+                  "metric": {
+                    "type": "string",
+                    "enum": [
+                      "open-tickets",
+                      "age-distribution",
+                      "overdue-tickets"
+                    ]
+                  },
+                  "group": {
+                    "type": "string",
+                    "enum": [
+                      "owner",
+                      "priority"
+                    ]
+                  },
+                  "filter": {
+                    "type": "string",
+                    "enum": [
+                      "urgent",
+                      "open"
+                    ]
+                  }
+                },
+                "required": [
+                  "chart",
+                  "metric",
+                  "group",
+                  "filter"
+                ],
+                "additionalProperties": false
+              }
+            ]
+          }
+        },
+        "required": [
+          "threadId",
+          "op",
+          "expectedRevision",
+          "view"
+        ],
+        "additionalProperties": false
+      },
+      {
+        "type": "object",
+        "properties": {
+          "threadId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160,
+            "pattern": "^[a-zA-Z0-9_:.-]+$"
+          },
+          "op": {
+            "type": "string",
+            "const": "complete"
+          },
+          "expectedRevision": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "target": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160,
+            "pattern": "^[a-zA-Z0-9_:.-]+$"
+          }
+        },
+        "required": [
+          "threadId",
+          "op",
+          "expectedRevision",
+          "target"
+        ],
+        "additionalProperties": false
+      },
+      {
+        "type": "object",
+        "properties": {
+          "threadId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160,
+            "pattern": "^[a-zA-Z0-9_:.-]+$"
+          },
+          "op": {
+            "type": "string",
+            "const": "commit"
+          },
+          "submissionId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "proposalId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160,
+            "pattern": "^[a-zA-Z0-9_:.-]+$"
+          },
+          "expectedRevision": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "saveDraft": {
+            "type": "boolean"
+          },
+          "draft": {
+            "type": "string",
+            "maxLength": 2000
+          },
+          "decisions": {
+            "minItems": 1,
+            "maxItems": 6,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "actionId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 160,
+                  "pattern": "^[a-zA-Z0-9_:.-]+$"
+                },
+                "accept": {
+                  "type": "boolean"
+                },
+                "title": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 180
+                },
+                "owner": {
+                  "type": "string",
+                  "enum": [
+                    "Avery",
+                    "Blair",
+                    "Casey",
+                    "Dana"
+                  ]
+                }
+              },
+              "required": [
+                "actionId",
+                "accept",
+                "title",
+                "owner"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "threadId",
+          "op",
+          "submissionId",
+          "proposalId",
+          "expectedRevision",
+          "saveDraft",
+          "draft",
+          "decisions"
+        ],
+        "additionalProperties": false
+      }
+    ]
+  }
+}

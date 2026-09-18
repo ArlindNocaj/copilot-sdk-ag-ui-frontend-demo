@@ -18,6 +18,11 @@ import { createPredictiveStateUpdatesAgent } from "./agents/predictive_state_upd
 import { createInterruptAgent } from "./agents/interrupt.js";
 import { createDeepagentsSubagentsAgent } from "./agents/deepagents_subagents.js";
 import { createSubgraphsAgent } from "./agents/subgraphs.js";
+import { tap } from "rxjs";
+import { z } from "zod";
+import { Store } from "./showcases/store.js";
+import { Conflict } from "../../../shared/domain.js";
+import { isShowcase, prepareShowcaseRun, showcaseAgents } from "./showcases/agents.js";
 
 export function createAgents(client: CopilotClientPort): Record<string, CopilotAgent> {
   return {
@@ -33,6 +38,7 @@ export function createAgents(client: CopilotClientPort): Record<string, CopilotA
     interrupt: createInterruptAgent(client),
     deepagents_subagents: createDeepagentsSubagentsAgent(client),
     subgraphs: createSubgraphsAgent(client),
+    ...showcaseAgents(client),
   };
 }
 
@@ -48,6 +54,7 @@ async function main() {
   });
   await client.start();
   const agents = createAgents(client);
+  const store = new Store();
   const server = http.createServer((req, res) => {
     const json = (status: number, body: unknown) => {
       res.writeHead(status, { "Content-Type": "application/json" }).end(JSON.stringify(body));
@@ -62,7 +69,7 @@ async function main() {
         json(200, { app: "copilot-sdk-ag-ui-frontend-demo", status: "healthy", backend: "typescript", mode: process.env.OPENAI_BASE_URL ? "byok" : "copilot", agents: Object.keys(agents) }); return;
       }
       const agent = req.method === "POST" && Object.hasOwn(agents, path) ? agents[path] : undefined;
-      if (!agent) { json(404, { error: "Unknown agent route" }); return; }
+      if (!agent && !(req.method === "POST" && path === "workbench")) { json(404, { error: "Unknown agent route" }); return; }
       if (!/^application\/json(?:;|$)/i.test(req.headers["content-type"] ?? "")) {
         json(415, { error: "application/json required" }); return;
       }
@@ -76,15 +83,17 @@ async function main() {
       let raw: unknown;
       try { raw = JSON.parse(Buffer.concat(chunks).toString("utf8")); }
       catch { json(400, { error: "Invalid JSON" }); return; }
+      if (path === "workbench") { json(200, store.execute(raw)); return; }
       const parsed = RunAgentInputSchema.safeParse(raw);
       if (!parsed.success) { json(400, { error: "Invalid AG-UI run", issues: parsed.error.issues }); return; }
       if (parsed.data.messages.length > 100 || parsed.data.tools.length > 8 ||
           !/^[\w-]{1,128}$/.test(parsed.data.threadId)) {
         json(400, { error: "Run exceeds demo limits" }); return;
       }
+      const observe = isShowcase(path) ? prepareShowcaseRun(store, path, parsed.data) : () => {};
       const encoder = new EventEncoder({ accept: "text/event-stream" });
       res.writeHead(200, { "Content-Type": "text/event-stream; charset=utf-8", "Cache-Control": "no-cache, no-transform", "X-Accel-Buffering": "no" });
-      const subscription = agent.run(parsed.data).subscribe({
+      const subscription = agent!.run(parsed.data).pipe(tap(observe)).subscribe({
         next: event => res.write(encoder.encode(event)),
         error: (error: unknown) => {
           console.error("Agent run failed:", error);
@@ -95,7 +104,7 @@ async function main() {
       res.once("close", () => subscription.unsubscribe());
     })().catch((error: unknown) => {
       console.error("Request failed:", error);
-      if (!res.headersSent) json(500, { error: error instanceof Error ? error.message : "Request failed" });
+      if (!res.headersSent) json(error instanceof Conflict ? error.status : error instanceof z.ZodError ? 400 : 500, { error: error instanceof Error ? error.message : "Request failed", ...(error instanceof Conflict ? { code: error.code } : {}) });
       else res.destroy(error instanceof Error ? error : new Error("Request failed"));
     });
   });

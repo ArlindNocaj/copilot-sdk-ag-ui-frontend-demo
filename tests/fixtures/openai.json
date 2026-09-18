@@ -1,7 +1,7 @@
 {
   "fixtures": [
     {
-      "match": { "endpoint": "chat", "model": "gpt-4o", "userMessage": "capital of France", "hasToolResult": false },
+      "match": { "endpoint": "chat", "model": "gpt-4o", "systemMessage": "Use declared tools when requested.", "userMessage": "capital of France", "hasToolResult": false },
       "response": { "content": "The capital of France is Paris." }
     },
     {

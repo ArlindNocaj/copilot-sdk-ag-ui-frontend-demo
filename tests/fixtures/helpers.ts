@@ -48,7 +48,7 @@ export function currentState(messages: ChatMessage[]): any {
     if (!["system", "developer", "user"].includes(message.role)) continue;
     for (const value of jsonObjects(textOf(message.content)).toReversed()) {
       const state = value.state ?? value;
-      if (state && typeof state === "object" && ("recipe" in state || "document" in state)) return state;
+      if (state && typeof state === "object" && ("recipe" in state || "document" in state || "workflow" in state)) return state;
     }
   }
   return {};
@@ -57,7 +57,8 @@ export function currentState(messages: ChatMessage[]): any {
 export function turn(req: ChatCompletionRequest) {
   const messages = req.messages;
   const userIndex = messages.findLastIndex((message) => message.role === "user");
-  const user = textOf(messages[userIndex]?.content);
+  // Match intent, not field names and old prose inside the adapter's state preamble.
+  const user = textOf(messages[userIndex]?.content).replace(/## Current shared state\n```json\n[\s\S]*?\n```\s*/, "");
   const calls = new Map<string, { name: string; args: any }>();
   const allResults = [];
   for (const [index, message] of messages.entries()) {

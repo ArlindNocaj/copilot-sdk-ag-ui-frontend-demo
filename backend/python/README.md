@@ -1,7 +1,7 @@
 # Standalone Python backend
 
 The twelve agent factories and the small vendored AG-UI adapter are copied unchanged
-from [the verified source commit](https://github.com/ag-ui-protocol/ag-ui/tree/8665f1ee1aeb5fe7f873a850b20df9af0c4fbba2/integrations/copilot-sdk/python).
+from [the verified fork source commit](https://github.com/ArlindNocaj/ag-ui/tree/8665f1ee1aeb5fe7f873a850b20df9af0c4fbba2/integrations/copilot-sdk/python).
 No checkout of that repository is needed. The source is MIT licensed; see
 [LICENSE](./LICENSE).
 
@@ -9,8 +9,8 @@ From the repository root, install and run with Python 3.11+ and
 [uv](https://docs.astral.sh/uv/):
 
 ```sh
-uv sync --project backend/python --extra server --locked
-uv run --project backend/python --extra server --locked copilot-ag-ui-demo
+uv sync --project backend/python --extra server --locked --default-index https://pypi.org/simple
+uv run --project backend/python --extra server --locked --default-index https://pypi.org/simple copilot-ag-ui-demo
 ```
 
 Use the machine's authenticated Copilot account, or set `OPENAI_BASE_URL`,
@@ -19,9 +19,12 @@ to `gpt-5.4-mini`; BYOK instead defaults to `gpt-4o` unless
 `OPENAI_CHAT_MODEL_ID` is set. Model capabilities (images, reasoning, tool calls)
 must be supported by the selected provider.
 
-The defaults are `HOST=127.0.0.1`, `PORT=8027`, and
-`FRONTEND_ORIGIN=http://127.0.0.1:3000`. Health is at
-<http://127.0.0.1:8027/health>. POST AG-UI `RunAgentInput` JSON to:
+The defaults are `HOST=127.0.0.1`, `PORT=8227`, and
+`FRONTEND_ORIGIN=http://127.0.0.1:3310`. Health is at
+<http://127.0.0.1:8227/health> and identifies
+`app="copilot-sdk-ag-ui-frontend-demo"`, `backend="python"`, and
+`mode="copilot"` (or `"byok"` when `OPENAI_BASE_URL` is set). Check this identity
+before treating an existing listener as this demo. POST AG-UI `RunAgentInput` JSON to:
 
 ```text
 /agentic_chat                /agentic_chat_reasoning
@@ -30,14 +33,22 @@ The defaults are `HOST=127.0.0.1`, `PORT=8027`, and
 /shared_state               /agentic_generative_ui
 /predictive_state_updates    /interrupt
 /deepagents_subagents        /subgraphs
+/release_readiness           /support_triage
 ```
 
-Each agent also provides `GET /{feature}/health`. Responses use AG-UI SSE, including
+The twelve simple agents also provide `GET /{feature}/health`. Responses use AG-UI SSE, including
 `RUN_ERROR` when a native session fails. Malformed JSON/schema, invalid Host,
 foreign Origin, non-JSON POSTs, and bodies over 4 MiB are rejected before inference.
 The size limit includes base64 overhead; use small inline images.
 Thread IDs must contain 1–128 ASCII letters, digits, underscores, or hyphens.
 Each run accepts at most 100 messages and 8 frontend tools.
+
+The two rich routes use the same native SDK and pinned adapter, with an independent
+Python authoritative store. `POST /workbench` initializes/reads the workspace,
+changes views, stages model-issued plans, commits explicit decisions, and completes
+fictional items. Rich runs accept only `review_plan`, replace client-supplied state
+with server-owned state, and verify continuation receipts against recorded decisions.
+The packaged `showcase_data` copy is checked against the root shared data by `pnpm test`.
 
 This unauthenticated demo binds only to loopback. Only exact loopback Host headers
 with the configured port are accepted. Browser Origin, when present, must equal
@@ -56,7 +67,7 @@ with a fresh conversation after restarting the backend.
 
 ```sh
 uv lock --project backend/python --check
-uv run --project backend/python --extra server --locked pytest
+uv run --project backend/python --extra server --locked pytest backend/python/tests
 uv run --project backend/python --extra server --locked ruff check backend/python
 uv build --project backend/python
 ```

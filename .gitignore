@@ -2,6 +2,7 @@ node_modules/
 .next/
 dist/
 .venv/
+.runtime/
 __pycache__/
 .pytest_cache/
 .ruff_cache/

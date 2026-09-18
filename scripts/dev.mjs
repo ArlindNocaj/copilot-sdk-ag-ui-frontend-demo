@@ -22,7 +22,8 @@ const env = {
 const children = [];
 let stopping = false;
 function start(command, args, extra = {}) {
-  const child = spawn(command, args, { cwd: root, env: { ...env, ...extra }, stdio: "inherit" });
+  // Backends stop their SDK children themselves, before terminal/test process-group teardown.
+  const child = spawn(command, args, { cwd: root, env: { ...env, ...extra }, stdio: "inherit", detached: process.platform !== "win32" });
   children.push(child);
   child.on("error", error => { console.error(`${command}:`, error.message); stop(1); });
   child.on("exit", (code, signal) => {

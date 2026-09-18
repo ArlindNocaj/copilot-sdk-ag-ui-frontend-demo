@@ -30,7 +30,8 @@ function Content({ feature, setError }: { feature: Feature; setError: (message: 
   const [events, setEvents] = useState<string[]>([]);
   const [children, setChildren] = useState<Record<string, { name: string; status: string }>>({});
   const [attachment, setAttachment] = useState<{ mimeType: string; data: string; name: string }>();
-  const busy = agent.isRunning || executingToolCallIds.size > 0;
+  const [submitting, setSubmitting] = useState(false);
+  const busy = submitting || agent.isRunning || executingToolCallIds.size > 0;
   useEffect(() => agent.subscribe({
     onRunErrorEvent: ({ event }) => setError(event.message),
     onRunFailed: ({ error }) => setError(error.message),
@@ -40,11 +41,15 @@ function Content({ feature, setError }: { feature: Feature; setError: (message: 
     onSubagentErrorEvent: ({ event }) => { setError(event.message); setChildren(previous => ({ ...previous, [event.subagentRunId]: { name: previous[event.subagentRunId]?.name ?? "Specialist", status: "error" } })); },
   }).unsubscribe, [agent, setError]);
   const send = (text: string) => {
+    if (!isReady || busy || !text.trim()) return;
     setError("");
+    setSubmitting(true);
     agent.addMessage({ id: crypto.randomUUID(), role: "user", content: attachment
       ? [{ type: "text", text }, { type: "binary", mimeType: attachment.mimeType, data: attachment.data }]
       : text });
-    void copilotkit.runAgent({ agent }).catch(error => setError(error instanceof Error ? error.message : "Run failed"));
+    // The promise includes frontend approval and its native continuation, unlike a single AG-UI run.
+    void copilotkit.runAgent({ agent }).catch(error => setError(error instanceof Error ? error.message : "Run failed"))
+      .finally(() => setSubmitting(false));
   };
   return <div className="workspace">
     <section className="surface">
@@ -75,7 +80,7 @@ function Content({ feature, setError }: { feature: Feature; setError: (message: 
       {feature === "tool_based_generative_ui" && <HaikuTool feature={feature} />}
       {feature === "shared_state" && <Recipe feature={feature} />}
       {feature === "agentic_generative_ui" && <Steps feature={feature} />}
-      {feature === "predictive_state_updates" && <Document feature={feature} />}
+      {feature === "predictive_state_updates" && <Document feature={feature} setError={setError} />}
       {["interrupt", "subgraphs", "deepagents_subagents"].includes(feature) && <InterruptPanel feature={feature} />}
       {!!Object.keys(children).length && <section className="panel"><h3>Native subagents</h3>{Object.entries(children).map(([id, child]) =>
         <div className="subagent" data-testid="subagent" key={id}><strong>{child.name}</strong><span>{child.status}</span><small>{id}</small></div>)}</section>}
@@ -86,7 +91,7 @@ function Content({ feature, setError }: { feature: Feature; setError: (message: 
     <section className="conversation" aria-label="Agent conversation">
       <CopilotChat agentId={feature}
         labels={{ welcomeMessageText: "Use the example to begin, or send your own message.", chatInputPlaceholder: "Ask the agent...", chatDisclaimerText: "Copilot SDK via AG-UI. Demo only." }}
-        input={{ textArea: { "aria-label": "Message" }, sendButton: { "aria-label": "Send message" } }} />
+        input={{ onSubmitMessage: send, isRunning: busy, textArea: { "aria-label": "Message", disabled: busy }, sendButton: { "aria-label": busy ? "Stop agent" : "Send message" } }} />
     </section>
   </div>;
 }
@@ -156,19 +161,24 @@ function Steps({ feature }: { feature: string }) {
   return <section className="panel" data-testid="steps"><h3>{steps.filter(step => step.status === "completed").length}/{steps.length} Complete</h3>
     {steps.map((step, index) => <p key={index}><span className={`status ${step.status}`}>{step.status}</span> {step.description}</p>)}</section>;
 }
-function Document({ feature }: { feature: string }) {
-  const { agent } = useAgent({ agentId: feature });
+function Document({ feature, setError }: { feature: string; setError: (message: string) => void }) {
+  const { agent, isReady } = useAgent({ agentId: feature });
   const [committed, setCommitted] = useState("");
   const committedRef = useRef("");
   useHumanInTheLoop({ agentId: feature, name: "write_document", description: "Preview the complete Markdown document and ask for approval.", parameters: z.object({ document: z.string() }),
-    render: ({ args, respond, status }) => <div className="panel" data-testid="document-review"><h3>Review document changes</h3><pre>{args.document}</pre>
+    render: ({ args, respond, status, toolCallId }) => <div className="panel" data-testid="document-review"><h3>Review document changes</h3><pre>{args.document}</pre>
       <button disabled={!respond || status !== "executing"} onClick={() => {
-        committedRef.current = args.document ?? ""; setCommitted(committedRef.current); agent.setState({ document: committedRef.current });
-        void respond?.("Changes approved.");
+        try {
+          const call = agent.messages.flatMap(message => message.role === "assistant" ? message.toolCalls ?? [] : []).find(call => call.id === toolCallId);
+          if (!call) throw new Error("Document tool call is no longer available.");
+          const value = z.object({ document: z.string() }).parse(JSON.parse(call.function.arguments));
+          committedRef.current = value.document; setCommitted(value.document); agent.setState({ document: value.document });
+          void respond?.("Changes approved.");
+        } catch (error) { setError(error instanceof Error ? error.message : "Invalid document proposal"); }
       }}>Accept changes</button>
       <button disabled={!respond || status !== "executing"} onClick={() => { agent.setState({ document: committedRef.current }); void respond?.("Changes rejected. Keep the previous document."); }}>Reject changes</button>
     </div>,
-  });
+  }, [isReady, feature]);
   return <section className="panel"><h3>Live preview</h3><pre data-testid="document-preview">{typeof agent.state?.document === "string" ? agent.state.document : ""}</pre>
     <h3>Accepted document</h3><pre data-testid="document">{committed || "No changes accepted yet."}</pre></section>;
 }
