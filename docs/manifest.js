@@ -1,29 +1,16 @@
 window.DOJO_MEDIA = {
   "title": "CopilotKit + Copilot SDK: interactive agent demos",
-  "createdAt": "2026-09-22T15:15:06.154602+00:00",
   "provider": {
-    "backend": "Python Copilot SDK 1.0.14",
+    "backend": "Python Copilot SDK",
     "frontend": "TypeScript / React + CopilotKit",
     "model": "Claude Sonnet 5",
-    "host": "Foundry",
-    "authentication": "Entra"
+    "host": "Foundry"
   },
-  "recordingNotes": [
-    "Recorded interactions, not a live agent service. Watching needs no account, model login, install or backend.",
-    "The 2:50 highlight uses selected excerpts at original speed. All twelve full recordings are included.",
-    "Synthetic examples only: no actual weather lookup, invitation, travel booking or business action.",
-    "Recorded with Python Copilot SDK and Claude Sonnet 5 via Microsoft Foundry inference. This is not a Foundry Hosted Agents deployment.",
-    "Selected takes passed their recorded checks; this is not a reliability or production-readiness guarantee.",
-    "The plan recording has a documented five-second initial trim. Earlier takes and raw/debug evidence are retained privately, not included in this download."
-  ],
   "demos": [
     {
       "id": "agentic_chat",
       "title": "Streaming conversation",
       "summary": "A real model response arrives incrementally in the chat.",
-      "status": "pass",
-      "statusLabel": "Verified in this take",
-      "notes": [],
       "prompts": [
         "Explain why streaming responses are useful in a chat interface. Write exactly eight numbered points, about 20 words each, and a one-sentence conclusion."
       ],
@@ -53,12 +40,7 @@ window.DOJO_MEDIA = {
     {
       "id": "backend_tool_rendering",
       "title": "Backend tools, visible results",
-      "summary": "Two weather tool calls become application-defined cards. Weather values are synthetic.",
-      "status": "pass",
-      "statusLabel": "Verified in this take",
-      "notes": [
-        "Weather is fixed sample data, not a live weather service."
-      ],
+      "summary": "Two weather tool calls become application-defined cards.",
       "prompts": [
         "What is the weather in San Francisco? Use the weather tool.",
         "Now show the weather in New York using the weather tool."
@@ -102,13 +84,6 @@ window.DOJO_MEDIA = {
       "id": "human_in_the_loop",
       "title": "A plan you can change",
       "summary": "Deselect a proposed step, confirm the rest, and resume the original tool call.",
-      "status": "pass",
-      "statusLabel": "Verified in this take",
-      "notes": [
-        "This sample confirms a plan; it performs no external business action.",
-        "An extra 5s of leading inspector/typing pre-roll is trimmed. The actual submission and every approval interaction remain; the untrimmed recording is retained.",
-        "All three proposal rows remain as decision history; only the two selected steps are approved."
-      ],
       "prompts": [
         "Propose exactly three independent steps for a workshop: prepare name badges, arrange the chairs, and test the projector. Use the task planner, then wait. After I confirm, count the steps in the returned approval result and summarize only those, beginning 'Approved plan: N steps'. Do not ask me to review again or claim to execute them."
       ],
@@ -151,9 +126,6 @@ window.DOJO_MEDIA = {
       "id": "tool_based_generative_ui",
       "title": "Swiss haikus, shaped by a tool",
       "summary": "Two Swiss-themed requests become distinct frontend-rendered haiku cards.",
-      "status": "pass",
-      "statusLabel": "Verified in this take",
-      "notes": [],
       "prompts": [
         "Write a Swiss-themed haiku about the Matterhorn glowing at dusk. Use generate_haiku.",
         "Now create a different Swiss-themed haiku about Lake Lucerne at dawn. Use generate_haiku."
@@ -195,15 +167,12 @@ window.DOJO_MEDIA = {
       "src": "clips/tool_based_generative_ui-v07.mp4",
       "poster": "posters/tool_based_generative_ui-v07.jpg",
       "duration": 57.8,
-      "insight": "Ask for a Swiss-themed haiku; the agent updates the application canvas. This full demo is retained but omitted from the highlight mix."
+      "insight": "Ask for a Swiss-themed haiku; the agent updates the application canvas."
     },
     {
       "id": "shared_state",
       "title": "The agent sees your edit",
       "summary": "Generate a recipe, change its ingredients in the form, and ask the model what changed.",
-      "status": "pass",
-      "statusLabel": "Verified in this take",
-      "notes": [],
       "prompts": [
         "Create a pasta recipe using generate_recipe; include an ingredient named exactly \"Pasta\".",
         "List the ingredients in the current recipe, including my manually added ingredient and its amount. Do not change the recipe."
@@ -255,11 +224,6 @@ window.DOJO_MEDIA = {
       "id": "agentic_generative_ui",
       "title": "Progress in the application",
       "summary": "A task plan advances through committed state updates.",
-      "status": "pass",
-      "statusLabel": "Verified in this take",
-      "notes": [
-        "Progress is a synthetic demonstration, not an external task execution log."
-      ],
       "prompts": [
         "Use the task planner to make a three-step plan for baking brownies and complete it."
       ],
@@ -290,11 +254,6 @@ window.DOJO_MEDIA = {
       "id": "predictive_state_updates",
       "title": "Preview. Approve. Keep control.",
       "summary": "Review a document, accept useful augmentations, and reject a change without losing accepted content.",
-      "status": "pass",
-      "statusLabel": "Verified in this take",
-      "notes": [
-        "Fictional document. Draft and changes are previewed first; only confirmed changes persist, and rejection restores the accepted text."
-      ],
       "prompts": [
         "Use write_document to draft a 90-word welcome note for a fictional developer workshop in Zurich. Use two plain paragraphs. End exactly with: Bring your laptop.",
         "Use write_document to add a short third paragraph describing a hands-on agent UI lab. Keep every existing word unchanged, including Zurich and Bring your laptop.",
@@ -342,17 +301,12 @@ window.DOJO_MEDIA = {
       "src": "clips/predictive_state_updates-v07.mp4",
       "poster": "posters/predictive_state_updates-v07.jpg",
       "duration": 73.92,
-      "insight": "The first draft has no earlier text to compare. See green additions at 0:31 and 0:59, and the red/green city change at 0:45."
+      "insight": "Preview highlighted changes, then accept or reject them without losing accepted content."
     },
     {
       "id": "agentic_chat_reasoning",
       "title": "A recommendation you can understand",
-      "summary": "A compact comparison, one recommendation and a readable rationale. Native reasoning telemetry is reported separately.",
-      "status": "pass",
-      "statusLabel": "Verified in this take",
-      "notes": [
-        "Provider reasoning summaries are optional and vary by run. This take's actual event counts are retained; the concise decision rationale is not a guarantee of access to private thinking."
-      ],
+      "summary": "A compact comparison, one recommendation and a readable rationale.",
       "prompts": [
         "Choose a demo setup for tomorrow's workshop. Compare a local model (offline operation after setup, more setup effort) with a managed endpoint (network required, less setup effort). Show a compact two-row comparison, recommend one for fastest setup, and give a single-sentence rationale."
       ],
@@ -383,9 +337,6 @@ window.DOJO_MEDIA = {
       "id": "agentic_chat_multimodal",
       "title": "An image becomes an ASCII sketch",
       "summary": "The actual uploaded picture is visible alongside a compact visual reconstruction.",
-      "status": "pass",
-      "statusLabel": "Verified in this take",
-      "notes": [],
       "prompts": [
         "Recreate the uploaded image with simple ASCII outlines in one fenced code block, at most 9 lines total. Underneath each outline, write a label naming its observed color AND shape. No explanatory paragraphs. If the image was not received, say so rather than guessing."
       ],
@@ -428,12 +379,7 @@ window.DOJO_MEDIA = {
     {
       "id": "interrupt",
       "title": "Choose a time, or cancel",
-      "summary": "A synthetic meeting picker suspends and resumes a tool; a second request is cancelled. Nothing is booked.",
-      "status": "pass",
-      "statusLabel": "Verified in this take",
-      "notes": [
-        "Synthetic scheduling tool only. No calendar integration, invitation or booking occurs."
-      ],
+      "summary": "A meeting picker pauses the agent for a selection or cancellation.",
       "prompts": [
         "Book an intro call with the sales team to discuss pricing.",
         "Book another intro call with the sales team about enterprise pricing."
@@ -493,11 +439,6 @@ window.DOJO_MEDIA = {
       "id": "deepagents_subagents",
       "title": "Delegation you can follow",
       "summary": "A native research child asks for approval, resumes, and returns its answer through the supervisor.",
-      "status": "pass",
-      "statusLabel": "Verified in this take",
-      "notes": [
-        "This research example has no web-search tool; it demonstrates delegation and approval, not cited research."
-      ],
       "prompts": [
         "Why is the sky blue?"
       ],
@@ -539,12 +480,7 @@ window.DOJO_MEDIA = {
     {
       "id": "subgraphs",
       "title": "Three travel specialists",
-      "summary": "Native flight, hotel and experience specialists assemble a synthetic itinerary. Nothing is booked.",
-      "status": "pass",
-      "statusLabel": "Verified in this take",
-      "notes": [
-        "Static Amsterdam-San Francisco options. Specialists run sequentially. Nothing is booked."
-      ],
+      "summary": "Native flight, hotel and experience specialists work together on an itinerary.",
       "prompts": [
         "Help me plan a trip from Amsterdam to San Francisco using the demo itinerary."
       ],
@@ -593,16 +529,6 @@ window.DOJO_MEDIA = {
     "silentSrc": "mix/highlights-silent-v10.mp4",
     "poster": "posters/highlights-v10.jpg",
     "duration": 170.72,
-    "notes": [
-      "Selected excerpts from passing recorded takes, at original speed. Cuts shorten setup and pauses; full clips remain available.",
-      "Streaming chat is the first interaction, shown in the complete recorded interface. Haiku is omitted from the highlight mix. Rich edits enlarge the actual document and show the same-time approval panel.",
-      "The image panel shows the actual uploaded file. Tool panels show real same-take receipts, not a live reasoning inspector.",
-      "9 patterns in this focused mix; all twelve full demos remain in the gallery. This is not a fresh all-twelve run.",
-      "Original instrumental generated locally; no commercial song, external samples or voice-over.",
-      "Earlier unsuccessful takes are retained privately. This package contains selected successful takes, with limitations described below.",
-      "Real Foundry inference with the Python backend. Synthetic data; nothing booked or sent. This release shares recorded media, not a live application deployment.",
-      "CopilotKit frontend connects through the AG-UI protocol and custom adapter to a Python Copilot SDK backend. Local, on-premises and Microsoft Foundry Hosted Agents are hosting options, not three deployments demonstrated here."
-    ],
     "chapters": [
       {
         "time": 0.0,

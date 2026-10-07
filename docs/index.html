@@ -102,7 +102,7 @@ FORM: Brief-pinned review desk, not a randomized concept. On small screens the m
     .outcome[data-status="fail"] { color: var(--fail); }
     .outcome[data-status="pending"], .outcome[data-status="mix"] { color: var(--muted); }
     .status-detail { font-size: .875rem; color: var(--muted); }
-    .current-summary { color: #485660; font-size: .9375rem; max-width: 72ch; }
+    .current-summary { color: #485660; font-size: .9375rem; max-width: 72ch; margin-top: 10px; }
     .program { grid-column: 2; grid-row: 1 / span 2; padding: 0 0 0 22px; border-left: 1px solid #bfc9d0; min-width: 0; }
     .program-header { padding: 1px 0 12px; }
     .program-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
@@ -238,12 +238,11 @@ FORM: Brief-pinned review desk, not a randomized concept. On small screens the m
   <main class="shell">
     <header class="masthead">
       <div>
-        <h1 id="collection-title">Agent demo review</h1>
+        <h1 id="collection-title">Interactive agent demos</h1>
         <p id="setup-summary">Copilot SDK × AG-UI × CopilotKit</p>
       </div>
       <div class="header-meta">
-        <a href="#about-recording">Setup &amp; provenance</a>
-        <time id="created-date"></time>
+        <a href="#about-recording">Build your own</a>
       </div>
     </header>
 
@@ -260,7 +259,6 @@ FORM: Brief-pinned review desk, not a randomized concept. On small screens the m
             <button id="mix-mode" type="button" aria-pressed="true">Highlight mix</button>
             <button id="full-mode" type="button" aria-pressed="false">Full demos</button>
           </div>
-          <a class="toolbar-link" href="#known-limitations" id="limitations-link">Known limitations</a>
         </div>
         <div id="selected-context" class="selected-context" hidden>
           <p id="current-insight" class="current-insight" hidden></p>
@@ -277,7 +275,7 @@ FORM: Brief-pinned review desk, not a randomized concept. On small screens the m
             Your browser does not support native video playback. Use the download link below to open the recording in a media player.
           </video>
           <div class="stage-message" id="stage-message">
-            <h2 id="stage-title">Preparing the review library</h2>
+            <h2 id="stage-title">Loading the gallery</h2>
             <p id="stage-detail">The recordings and their manifest have not been loaded yet.</p>
             <button class="button" id="retry-media" type="button" hidden>Retry loading</button>
           </div>
@@ -289,7 +287,6 @@ FORM: Brief-pinned review desk, not a randomized concept. On small screens the m
           <div class="transport-links">
             <a id="download-clip" download hidden>Download full clip</a>
             <a id="download-silent" download hidden>Download silent mix</a>
-            <a id="download-raw" download hidden>Raw WebM (untrimmed)</a>
           </div>
         </div>
         <div class="now-playing">
@@ -297,19 +294,8 @@ FORM: Brief-pinned review desk, not a randomized concept. On small screens the m
             <h2 id="current-title">Select a recording</h2>
             <span class="sequence" id="selection-sequence"></span>
           </div>
-          <div class="result-line">
-            <span id="current-status" class="outcome" data-status="pending">Not ready</span>
-            <span id="status-detail" class="status-detail"></span>
-          </div>
-          <p id="current-summary" class="current-summary">The library will show the recording-specific result for each example.</p>
+          <p id="current-summary" class="current-summary">Explore the interaction behind each demo.</p>
         </div>
-        <details id="tool-evidence-section" class="tool-evidence-section" hidden>
-          <summary>Inspect recorded tool call</summary>
-          <div class="details-body">
-            <p class="tool-evidence-context"><strong>Recorded AG-UI evidence.</strong> Tool arguments and results captured during this recording, not model reasoning or a live inspector.</p>
-            <div id="tool-evidence"></div>
-          </div>
-        </details>
       </section>
 
       <aside class="program" aria-labelledby="program-title">
@@ -318,12 +304,11 @@ FORM: Brief-pinned review desk, not a randomized concept. On small screens the m
             <h2 id="program-title">Demo program</h2>
             <span id="program-count">12 examples</span>
           </div>
-          <p class="program-totals" id="program-totals">Awaiting recording results</p>
           <p class="program-hint" id="program-hint">↑ ↓ to move focus · Enter to select</p>
         </div>
         <ol id="demo-list" class="program-list" aria-label="All twelve demo recordings" aria-describedby="program-hint"></ol>
         <div class="program-footer">
-          <p id="program-context">Complete interactions at original speed. Raw captures and development evidence are not included.</p>
+          <p id="program-context">Choose a demo to watch the complete interaction.</p>
           <div class="previous-next" role="group" aria-label="Browse full recordings">
             <button id="previous-demo" class="button" type="button" disabled>← Previous</button>
             <button id="next-demo" class="button" type="button" disabled>Next →</button>
@@ -337,11 +322,6 @@ FORM: Brief-pinned review desk, not a randomized concept. On small screens the m
           <p class="chapter-hint">Jump to a moment. Seeking does not start playback.</p>
           <div id="chapters" class="chapters"></div>
         </section>
-        <section class="evidence-section" aria-labelledby="review-notes-heading">
-          <h3 id="review-notes-heading">Review notes</h3>
-          <ul id="review-notes" class="notes"></ul>
-          <p id="notes-empty">No recording-specific notes have been supplied yet.</p>
-        </section>
         <section class="evidence-section" id="mix-sources-section" aria-labelledby="mix-sources-heading" hidden>
           <h3 id="mix-sources-heading">Full recordings behind this mix</h3>
           <div id="mix-sources" class="mix-sources"></div>
@@ -349,18 +329,6 @@ FORM: Brief-pinned review desk, not a randomized concept. On small screens the m
         <details id="prompts-section" hidden>
           <summary id="prompts-summary">Prompts used</summary>
           <div class="details-body"><ol id="prompts" class="prompts"></ol></div>
-        </details>
-        <details id="known-limitations" class="known-limitations">
-          <summary>About these recordings</summary>
-          <div class="details-body">
-            <ul class="notes">
-              <li>These are selected successful takes, not a guarantee that every model run succeeds.</li>
-              <li>An earlier human-approval take failed with malformed tool arguments. The gallery uses a different verified take with a five-second initial trim.</li>
-              <li>Reasoning summaries depend on the provider and run; their appearance is optional.</li>
-              <li>Tools and business data are synthetic. No real invitations or bookings are made.</li>
-              <li>Local, on-premises and Microsoft Foundry Hosted Agents are hosting options, not three deployments demonstrated here. Fully disconnected operation is unverified.</li>
-            </ul>
-          </div>
         </details>
       </div>
     </div>
@@ -370,40 +338,26 @@ FORM: Brief-pinned review desk, not a randomized concept. On small screens the m
         <h2 id="about-title">Create your own agent</h2>
         <a id="sample-application-link" class="button button-primary" href="https://github.com/ArlindNocaj/copilot-sdk-ag-ui-frontend-demo" target="_blank" rel="noopener noreferrer" aria-describedby="sample-access-note">Sample application ↗</a>
         <p id="sample-access-note" class="sample-access-note">Public sample application. Watching these recordings needs no account or setup.</p>
-        <h3 id="technical-provenance">Technical provenance</h3>
-        <p><span class="proposal-status">Custom integration proposal</span> — a fork-based adapter, not official upstream integration or a production-readiness claim.</p>
-        <p>The full demos and the supplied highlight mix are separate review assets. This page plays existing files; it does not edit footage or render a new mix.</p>
-        <div class="source-links">
-          <a href="https://github.com/ArlindNocaj/ag-ui/tree/main" target="_blank" rel="noopener noreferrer">Current integration fork · main ↗</a>
-          <a href="https://github.com/ag-ui-protocol/ag-ui/issues/2887" target="_blank" rel="noopener noreferrer">Upstream integration tracker · ag-ui-protocol/ag-ui#2887 ↗</a>
-          <a href="https://github.com/ArlindNocaj/ag-ui/tree/feature/add-copilot-sdk-support" target="_blank" rel="noopener noreferrer">Original recorded integration branch ↗</a>
-          <a href="https://github.com/ArlindNocaj/ag-ui/pull/1" target="_blank" rel="noopener noreferrer">Merged fork PR · ArlindNocaj/ag-ui#1 ↗</a>
-        </div>
-        <div id="recording-notes-section" hidden>
-          <h3>Recording notes</h3>
-          <ul id="recording-notes" class="notes"></ul>
-        </div>
+        <p>Connect a rich CopilotKit interface to GitHub Copilot SDK through AG-UI, then add your own tools and interactions.</p>
       </div>
       <div>
-        <h2>Recorded setup</h2>
+        <h2>Demo stack</h2>
         <dl class="provider">
           <dt>Backend</dt><dd id="provider-backend">Awaiting manifest</dd>
           <dt>Frontend</dt><dd id="provider-frontend">Awaiting manifest</dd>
           <dt>Model</dt><dd id="provider-model">Awaiting manifest</dd>
           <dt>Host</dt><dd id="provider-host">Awaiting manifest</dd>
-          <dt>Authentication</dt><dd id="provider-authentication">Awaiting manifest</dd>
         </dl>
-        <p class="provider-note">Custom live Foundry setup; not included in the public integration branch. Private endpoints and account details are intentionally not shown.</p>
       </div>
     </section>
     <footer class="footer">
-      <span>Recorded demos · No tracking · No autoplay</span>
-      <span id="footer-count">Results come from the recording manifest</span>
+      <span>CopilotKit × AG-UI × GitHub Copilot SDK</span>
+      <span id="footer-count">12 recorded demos</span>
     </footer>
     <p class="sr-only" id="announcement" role="status" aria-live="polite" aria-atomic="true"></p>
   </main>
 
-  <script src="./manifest.js"></script>
+  <script src="./manifest.js?v=20261007-clean"></script>
   <script id="gallery-logic">
     "use strict";
     window.DojoGallery = (() => {
@@ -421,7 +375,6 @@ FORM: Brief-pinned review desk, not a randomized concept. On small screens the m
         ["deepagents_subagents", "Deep Agents subagents"],
         ["subgraphs", "Subgraphs"]
       ];
-      const statusNames = { pass: "Pass", partial: "Partial", fail: "Fail", pending: "Not reviewed", mix: "Edited compilation" };
       const text = (value, fallback = "") => typeof value === "string" && value.trim() ? value.trim() : fallback;
       const strings = value => Array.isArray(value) ? value.filter(item => typeof item === "string" && item.trim()).map(item => item.trim()) : [];
       const seconds = value => typeof value === "number" && Number.isFinite(value) && value >= 0 ? value : null;
@@ -435,18 +388,13 @@ FORM: Brief-pinned review desk, not a randomized concept. On small screens the m
       function localAsset(value) {
         if (typeof value !== "string") return "";
         const path = value.trim().replace(/^\.\//, "");
-        if (!/^(clips|raw|posters|mix|assets)\/[a-zA-Z0-9_./ -]+$/.test(path)) return "";
+        if (!/^(clips|posters|mix|assets)\/[a-zA-Z0-9_./ -]+$/.test(path)) return "";
         return path.split("/").some(part => part === ".." || part === "." || !part) ? "" : path;
       }
       function chapters(value, duration) {
         if (!Array.isArray(value)) return [];
         return value.filter(item => item && seconds(item.time) !== null && text(item.label) && (duration === null || item.time <= duration))
           .map(item => ({ time: item.time, label: item.label.trim() })).sort((a, b) => a.time - b.time);
-      }
-      function recordedValue(value) {
-        if (typeof value === "string") return value;
-        try { return JSON.stringify(value, null, 2) ?? "Not supplied in the recorded evidence."; }
-        catch (error) { return `Unable to display this recorded value: ${error.message}`; }
       }
       function collection(manifest) {
         const valid = !!manifest && typeof manifest === "object" && Array.isArray(manifest.demos);
@@ -462,21 +410,13 @@ FORM: Brief-pinned review desk, not a randomized concept. On small screens the m
             summary: text(data.summary, record ? "No description supplied for this recording." : "This recording has not been added to the local collection yet."),
             insight: text(data.insight),
             inputImage: imageSrc ? { src: imageSrc, alt: text(image.alt, "Actual image uploaded in this recording"), label: text(image.label) } : null,
-            status: ["pass", "partial", "fail"].includes(data.status) ? data.status : "pending",
-            statusLabel: text(data.statusLabel, record ? "" : "Awaiting recording"),
-            notes: strings(data.notes), prompts: strings(data.prompts),
-            src: localAsset(data.src), raw: localAsset(data.raw), poster: localAsset(data.poster),
-            duration, chapters: chapters(data.chapters, duration),
-            toolEvidence: Array.isArray(data.toolEvidence) ? data.toolEvidence.filter(call => call && typeof call === "object" && !Array.isArray(call)).map(call => ({
-              name: text(call.name, "Unnamed recorded tool"),
-              arguments: recordedValue(call.arguments), result: recordedValue(call.result),
-              startedAtSeconds: seconds(call.startedAtSeconds), finishedAtSeconds: seconds(call.finishedAtSeconds)
-            })) : []
+            prompts: strings(data.prompts),
+            src: localAsset(data.src), poster: localAsset(data.poster),
+            duration, chapters: chapters(data.chapters, duration)
           };
         });
-        const counts = { pass: 0, partial: 0, fail: 0, pending: 0, supplied: 0, clips: 0 };
+        const counts = { supplied: 0, clips: 0 };
         for (const demo of demos) {
-          counts[demo.status]++;
           if (demo.supplied) counts.supplied++;
           if (demo.src) counts.clips++;
         }
@@ -484,22 +424,21 @@ FORM: Brief-pinned review desk, not a randomized concept. On small screens the m
         const duration = seconds(data.duration);
         const mix = {
           id: "mix", title: text(data.title, "Highlight mix"),
-          summary: "Selected excerpts with an original local instrumental. Full recordings are silent; return to Full demos for complete interactions, outcomes, and limitations.",
-          insight: "", inputImage: null, toolEvidence: [],
-          status: "mix", statusLabel: "Selected excerpts, not the complete evidence",
+          summary: "A quick tour of streaming, shared state, approvals and specialist agents. Choose a full demo to explore an interaction in detail.",
+          insight: "", inputImage: null,
           src: localAsset(data.src), silentSrc: localAsset(data.silentSrc), poster: localAsset(data.poster), duration,
-          notes: strings(data.notes), prompts: [], chapters: chapters(data.chapters, duration), raw: "",
+          prompts: [], chapters: chapters(data.chapters, duration),
           cuts: Array.isArray(data.cuts) ? data.cuts.filter(cut => cut && examples.some(([id]) => id === cut.feature)).map(cut => ({ feature: cut.feature, label: text(cut.label) })) : []
         };
         return { valid, demos, counts, mix };
       }
-      return { examples, statusNames, text, strings, seconds, frameRatio, clock, localAsset, chapters, recordedValue, collection };
+      return { examples, text, strings, seconds, frameRatio, clock, localAsset, chapters, collection };
     })();
   </script>
   <script id="gallery-ui">
     "use strict";
     (() => {
-      const { text, strings, frameRatio, clock, statusNames, collection } = window.DojoGallery;
+      const { text, frameRatio, clock, collection } = window.DojoGallery;
       const manifest = window.DOJO_MEDIA;
       const library = collection(manifest);
       const $ = id => document.getElementById(id);
@@ -556,7 +495,7 @@ FORM: Brief-pinned review desk, not a randomized concept. On small screens the m
         $("mix-mode").setAttribute("aria-pressed", String(mode === "mix"));
         $("program-context").textContent = mode === "mix"
           ? "Highlight mix active. Select any demo above to return to its full recording."
-          : "Complete interactions at original speed. Raw captures and development evidence are not included.";
+          : "Choose a demo to watch the complete interaction.";
         demoButtons.forEach((button, i) => {
           if (mode === "full" && i === index) button.setAttribute("aria-current", "true");
           else button.removeAttribute("aria-current");
@@ -565,9 +504,6 @@ FORM: Brief-pinned review desk, not a randomized concept. On small screens the m
         $("current-summary").textContent = current.summary;
         $("current-insight").textContent = current.insight;
         $("current-insight").hidden = !current.insight;
-        $("current-status").textContent = !current.supplied && mode === "full" ? "Not ready" : statusNames[current.status];
-        $("current-status").dataset.status = current.status;
-        $("status-detail").textContent = current.statusLabel.toLowerCase() === statusNames[current.status].toLowerCase() ? "" : current.statusLabel;
         $("selection-sequence").textContent = mode === "mix" ? "Highlight mix" : `${String(index + 1).padStart(2, "0")} / ${library.demos.length}`;
         $("clip-duration").textContent = current.duration === null ? "Duration not supplied" : `${clock(current.duration)} total`;
         $("previous-demo").disabled = mode === "mix" || index === 0;
@@ -576,15 +512,11 @@ FORM: Brief-pinned review desk, not a randomized concept. On small screens the m
         $("play-pause").textContent = "Play recording";
         setLink("download-clip", current.src, mode === "mix" ? "Download mix" : "Download full clip");
         setLink("download-silent", mode === "mix" ? current.silentSrc : "");
-        setLink("download-raw", current.raw);
-        fillList("review-notes", current.notes);
-        $("notes-empty").hidden = current.notes.length > 0;
         fillList("prompts", current.prompts);
         $("prompts-section").hidden = !current.prompts.length;
         $("prompts-summary").textContent = `Prompts used (${current.prompts.length})`;
         $("prompts-section").open = false;
         renderInputImage();
-        renderToolEvidence();
         renderChapters();
         renderMixSources();
         video.removeAttribute("src");
@@ -608,7 +540,7 @@ FORM: Brief-pinned review desk, not a randomized concept. On small screens the m
               ? "No local video file is listed for this selection. Add its relative media path to manifest.js, then reload this page."
               : "The media manifest is missing or invalid. Keep manifest.js beside index.html, then reload this page.");
         }
-        if (notify) announce(`${current.title} selected. ${$("current-status").textContent}. ${current.src ? "Playback is paused." : "Recording not ready."}`);
+        if (notify) announce(`${current.title} selected. ${current.src ? "Playback is paused." : "Recording not ready."}`);
       }
       function renderInputImage() {
         const image = current.inputImage;
@@ -622,32 +554,6 @@ FORM: Brief-pinned review desk, not a randomized concept. On small screens the m
         setLink("input-image-link", image ? image.src : "");
         if (image) element.setAttribute("src", image.src);
         else element.removeAttribute("src");
-      }
-      function renderToolEvidence() {
-        const calls = current.toolEvidence.map((call, index) => {
-          const section = node("section", "tool-call");
-          section.dataset.toolIndex = String(index);
-          section.dataset.toolName = call.name;
-          const heading = node("h3", "", call.name);
-          heading.id = `tool-evidence-name-${index}`;
-          section.setAttribute("aria-labelledby", heading.id);
-          const timing = [];
-          if (call.startedAtSeconds !== null) timing.push(`Started ${clock(call.startedAtSeconds)}`);
-          if (call.finishedAtSeconds !== null) timing.push(`Finished ${clock(call.finishedAtSeconds)}`);
-          section.append(heading, node("p", "tool-call-timing", timing.length ? timing.join(" · ") : "Timing not supplied"));
-          for (const [field, label] of [["arguments", "Arguments"], ["result", "Result"]]) {
-            const value = node("pre", "tool-evidence-code", call[field]);
-            value.dataset.field = field;
-            value.tabIndex = 0;
-            value.setAttribute("role", "region");
-            value.setAttribute("aria-label", `Recorded ${label.toLowerCase()} for ${call.name}, call ${index + 1}`);
-            section.append(node("h4", "tool-field-label", label), value);
-          }
-          return section;
-        });
-        $("tool-evidence").replaceChildren(...calls);
-        $("tool-evidence-section").hidden = !calls.length;
-        $("tool-evidence-section").open = false;
       }
       function renderChapters() {
         chapterButtons = current.chapters.map(chapter => {
@@ -709,8 +615,7 @@ FORM: Brief-pinned review desk, not a randomized concept. On small screens the m
         const button = node("button", "demo-button");
         button.type = "button";
         button.dataset.demoId = demo.id;
-        const outcome = demo.supplied ? statusNames[demo.status] : "Not ready";
-        button.setAttribute("aria-label", `${index + 1}. ${demo.title}. ${outcome}${demo.statusLabel ? `: ${demo.statusLabel}` : ""}. ${demo.duration === null ? "Duration not supplied" : `${clock(demo.duration)} duration`}${demo.src ? "" : ". Clip not ready"}.`);
+        button.setAttribute("aria-label", `${index + 1}. ${demo.title}. ${demo.duration === null ? "Duration not supplied" : `${clock(demo.duration)} duration`}${demo.src ? "" : ". Clip not ready"}.`);
         const thumb = node("span", "thumb");
         const fallback = node("span", "thumb-placeholder", demo.src ? "No poster supplied" : "Awaiting capture");
         thumb.append(fallback);
@@ -727,11 +632,9 @@ FORM: Brief-pinned review desk, not a randomized concept. On small screens the m
         const copy = node("span", "demo-copy");
         copy.append(node("span", "demo-title", demo.title));
         const meta = node("span", "demo-meta");
-        const status = node("span", "outcome", outcome);
-        status.dataset.status = demo.status;
         const selected = node("span", "selected-label", "Selected");
         selected.setAttribute("aria-hidden", "true");
-        meta.append(status, selected);
+        meta.append(selected);
         copy.append(meta);
         button.append(thumb, copy);
         button.addEventListener("click", () => select(index));
@@ -759,7 +662,6 @@ FORM: Brief-pinned review desk, not a randomized concept. On small screens the m
       $("mix-mode").addEventListener("click", () => { if (mode !== "mix") select(selectedIndex, "mix"); });
       $("previous-demo").addEventListener("click", () => { if (selectedIndex > 0) select(selectedIndex - 1); });
       $("next-demo").addEventListener("click", () => { if (selectedIndex < library.demos.length - 1) select(selectedIndex + 1); });
-      $("limitations-link").addEventListener("click", () => { $("known-limitations").open = true; });
       $("retry-media").addEventListener("click", () => select(selectedIndex, mode));
       $("play-pause").addEventListener("click", async () => {
         if (!current.src) return;
@@ -803,31 +705,21 @@ FORM: Brief-pinned review desk, not a randomized concept. On small screens the m
       });
 
       const { counts } = library;
-      $("program-count").textContent = `${counts.clips} / 12 clips listed`;
-      $("program-totals").textContent = `${counts.pass} pass · ${counts.partial} partial · ${counts.fail} fail${counts.pending ? ` · ${counts.pending} not reviewed` : ""}`;
-      $("footer-count").textContent = `Manifest results: ${counts.pass + counts.partial + counts.fail} / 12 reviewed`;
+      $("program-count").textContent = `${counts.clips} demos`;
+      $("footer-count").textContent = `${counts.clips} recorded demos`;
       if (!library.valid) {
-        alertMessage("Review library not ready", "manifest.js is missing, could not be read, or does not contain a demos array. Keep it beside this page and reload after the recordings are prepared. No passing results have been assumed.");
+        alertMessage("Gallery unavailable", "manifest.js is missing, could not be read, or does not contain a demos array. Reload this page or try again later.");
       } else if (counts.supplied < 12 || counts.clips < 12) {
         alertMessage("The recording library is incomplete", `${counts.supplied} of 12 demo entries and ${counts.clips} local clip paths are supplied. Missing recordings show a not-ready player; available clips can still be reviewed.`);
       }
       if (library.valid) {
-        const title = text(manifest.title, "Agent demo review");
+        const title = text(manifest.title, "Interactive agent demos");
         $("collection-title").textContent = title;
         document.title = `${title}`;
-        const date = new Date(manifest.createdAt);
-        if (manifest.createdAt && !Number.isNaN(date.getTime())) {
-          $("created-date").dateTime = date.toISOString();
-          $("created-date").textContent = `Prepared ${new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "Europe/Zurich" }).format(date)}`;
-        }
         const provider = manifest.provider || {};
         for (const field of ["backend", "frontend", "model"]) $(`provider-${field}`).textContent = text(provider[field], "Not specified in manifest");
         $("provider-host").textContent = text(provider.host).toLowerCase() === "foundry" ? "Foundry" : "Custom host (not disclosed)";
-        $("provider-authentication").textContent = text(provider.authentication).toLowerCase() === "entra" ? "Entra" : "Not specified";
-        $("setup-summary").textContent = `${text(provider.backend, "Backend not specified")} · ${text(provider.model, "Model not specified")} · ${$("provider-host").textContent}`;
-        const notes = strings(manifest.recordingNotes);
-        fillList("recording-notes", notes);
-        $("recording-notes-section").hidden = !notes.length;
+        $("setup-summary").textContent = "CopilotKit frontend · AG-UI protocol · GitHub Copilot SDK";
       }
       selectedIndex = Math.max(0, library.demos.findIndex(demo => demo.src));
       select(selectedIndex, "mix", false);

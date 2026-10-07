@@ -4,6 +4,8 @@
 
 ▶ **[Watch the gallery in your browser](https://arlindnocaj.github.io/copilot-sdk-ag-ui-frontend-demo/)** — a 2:50 highlight and all 12 demos. No download, login or setup. [Offline downloads](https://github.com/ArlindNocaj/copilot-sdk-ag-ui-frontend-demo/releases/tag/gallery-v10) are optional.
 
+[![Open the live CopilotKit and GitHub Copilot SDK demo gallery](docs/posters/highlights-v10.jpg)](https://arlindnocaj.github.io/copilot-sdk-ag-ui-frontend-demo/)
+
 ## Why use it
 
 - **The agent works inside your UI.** It can show results as cards, charts and editable proposals, read and update shared app state, and pause for your approval before acting.
