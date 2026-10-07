@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="420" viewBox="0 0 1440 420" role="img" aria-labelledby="title desc">
+  <title id="title">Your UI and your agent, connected through AG-UI</title>
+  <desc id="desc">CopilotKit with React and Next.js provides the interface. An AG-UI adapter carries chat, tool, state, and approval events in both directions. A Python or TypeScript backend uses GitHub Copilot SDK and its native runtime to coordinate the selected model and registered tools. This is a conceptual vector illustration; the reference guide's Local topology section shows the actual local services.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#99e3ca"/>
+    </marker>
+    <style>
+      text{font-family:Arial,sans-serif;fill:#f5f7f8}
+      .heading{font-size:32px;font-weight:700}
+      .label{font-size:24px;fill:#cbd5df}
+      .detail{font-size:22px;fill:#cbd5df}
+      .accent{fill:#99e3ca}
+      .line{fill:none;stroke:#99e3ca;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+    </style>
+  </defs>
+  <rect width="1440" height="420" rx="18" fill="#172027"/>
+  <text x="38" y="61" class="heading">Your application UI</text>
+  <text x="38" y="103" class="label">CopilotKit + React / Next.js</text>
+  <path d="M38 137h370" stroke="#53656c" stroke-width="2"/>
+  <text x="38" y="185" class="label">Chat and tool results</text>
+  <text x="38" y="232" class="label">Editable state and previews</text>
+  <rect x="38" y="271" width="178" height="49" rx="6" fill="#99e3ca"/>
+  <text x="68" y="303" font-size="24" style="fill:#172027;font-weight:700">Approve</text>
+  <rect x="234" y="271" width="153" height="49" rx="6" fill="none" stroke="#cbd5df" stroke-width="2"/>
+  <text x="273" y="303" font-size="24">Reject</text>
+  <text x="38" y="378" class="detail">You review the proposed changes</text>
+  <text x="526" y="143" class="heading accent">AG-UI</text>
+  <text x="526" y="184" class="label">protocol</text>
+  <path d="M464 219h291" class="line" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
+  <text x="486" y="274" class="detail">Chat · tools · state</text>
+  <text x="486" y="312" class="detail">Approval decisions</text>
+  <text x="486" y="378" class="detail">Custom SDK adapter</text>
+  <text x="819" y="61" class="heading">Your agent backend</text>
+  <text x="819" y="103" class="label">Python / uv or TypeScript</text>
+  <path d="M819 137h580" stroke="#53656c" stroke-width="2"/>
+  <text x="819" y="185" class="heading">GitHub Copilot SDK</text>
+  <text x="819" y="228" class="label">Native agent runtime</text>
+  <path d="M832 275h553" class="line"/>
+  <path d="M832 266v18M1385 266v18" class="line"/>
+  <text x="819" y="319" class="label">Selected model + registered tools</text>
+  <text x="819" y="378" class="detail">Works, pauses for your decision, continues</text>
+</svg>

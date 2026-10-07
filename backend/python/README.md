@@ -1,9 +1,13 @@
 # Standalone Python backend
 
 The twelve agent factories and the small vendored AG-UI adapter are copied unchanged
-from [the verified fork source commit](https://github.com/ArlindNocaj/ag-ui/tree/8665f1ee1aeb5fe7f873a850b20df9af0c4fbba2/integrations/copilot-sdk/python).
+from [fork `main` at the verified 2026-10-07 tip](https://github.com/ArlindNocaj/ag-ui/tree/7709498572efe34b9648ac78c94dab3427441bea/integrations/copilot-sdk/python).
 No checkout of that repository is needed. The source is MIT licensed; see
 [LICENSE](./LICENSE).
+
+These Python sources are unchanged from the demo's historical `8665f1ee` pin.
+Upstream integration is tracked in [ag-ui-protocol/ag-ui#2887](https://github.com/ag-ui-protocol/ag-ui/issues/2887);
+the [source reference](../../docs/reference.md#source-and-dependency-status) records the eventual switch criteria.
 
 From the repository root, install and run with Python 3.11+ and
 [uv](https://docs.astral.sh/uv/):

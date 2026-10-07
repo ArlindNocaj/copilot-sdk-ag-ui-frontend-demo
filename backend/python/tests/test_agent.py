@@ -139,7 +139,7 @@ async def collect(agent: CopilotAgent, input_data: RunAgentInput) -> list[Any]:
 
 
 async def test_streams_assistant_text():
-    agent = CopilotAgent(FakeClient(TEXT_TURN))
+    agent = CopilotAgent(FakeClient(TEXT_TURN), run_timeout=1)
     events = await collect(agent, make_input())
     types = [event.type for event in events]
     assert types[0] == "RUN_STARTED"
@@ -153,7 +153,7 @@ async def test_streams_assistant_text():
 async def test_context_and_state_reach_the_prompt():
     """RunAgentInput.context must not be dropped — the Dojo passes the user name there."""
     client = FakeClient(TEXT_TURN)
-    agent = CopilotAgent(client)
+    agent = CopilotAgent(client, run_timeout=1)
     await collect(
         agent,
         make_input(
@@ -256,7 +256,7 @@ async def test_run_timeout_does_not_await_a_wedged_native_call():
 
 
 def test_fastapi_endpoint_streams_sse():
-    agent = CopilotAgent(FakeClient(TEXT_TURN))
+    agent = CopilotAgent(FakeClient(TEXT_TURN), run_timeout=1)
     app = FastAPI()
     add_copilot_fastapi_endpoint(app=app, agent=agent, path="/agentic_chat")
     with TestClient(app) as http:
@@ -356,6 +356,7 @@ async def test_subagent_lifecycle_and_message_tool_tags():
             },
         },
         {"type": "subagent.started", "data": child},
+        {"type": "session.idle", "data": {}},
         {
             "type": "assistant.message_delta",
             "data": {"messageId": "child-message", "deltaContent": "Found it"},
@@ -436,6 +437,23 @@ async def test_subagent_lifecycle_and_message_tool_tags():
     assert all(e.subagent_run_id == "child-1" for e in tagged)
     assert events[-1].type == "RUN_FINISHED"
 
+    mapper = EventMapper()
+    started = mapper.map_event(
+        {"id": "paused-child", "type": "subagent.started", "agentId": "child-1", "data": child}
+    )
+    assert [(e.type, e.subagent_run_id, e.outcome.type) for e in mapper.suspend()] == [
+        ("SUBAGENT_FINISHED", "child-1", "suspended"),
+    ]
+    assert mapper.resume() == started
+    assert mapper.resume() == []
+    completed = mapper.map_event(
+        {"id": "completed-child", "type": "subagent.completed", "agentId": "child-1", "data": child}
+    )
+    assert [(e.type, e.subagent_run_id, e.outcome.type) for e in completed] == [
+        ("SUBAGENT_FINISHED", "child-1", "success"),
+    ]
+    assert mapper.suspend() == []
+
 
 @pytest.mark.parametrize("with_text", [True, False], ids=["text-and-image", "image-only"])
 async def test_inline_image_and_legacy_binary_are_sent_as_blobs(with_text):
@@ -454,7 +472,7 @@ async def test_inline_image_and_legacy_binary_are_sent_as_blobs(with_text):
     if with_text:
         content.insert(0, {"type": "text", "text": "Describe these."})
     events = await collect(
-        CopilotAgent(client),
+        CopilotAgent(client, run_timeout=1),
         make_input(
             messages=[{"id": "image-user", "role": "user", "content": content}],
         ),
@@ -468,6 +486,8 @@ async def test_inline_image_and_legacy_binary_are_sent_as_blobs(with_text):
     ]
     if with_text:
         assert client.session.prompts[0] == "Describe these."
+    else:
+        assert client.session.prompts[0] == "Describe the attached media."
     assert events[-1].type == "RUN_FINISHED"
 
 
@@ -509,11 +529,13 @@ async def test_predict_state_and_immutable_snapshots_across_mutable_backend_hand
     agent = CopilotAgent(
         client,
         predict_state=prediction,
+        run_timeout=1,
         tools=[
             AGUITool("set_theme", "Update theme", {"type": "object"}, update_theme),
         ],
     )
     events = await collect(agent, make_input(state={"theme": {"history": ["dark"]}}))
+    assert client.options["tools"][0].skip_permission is False
     assert seen_states == [
         {"theme": {"history": ["dark"]}},
         {"theme": {"history": ["dark", "light"]}},
