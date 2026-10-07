@@ -18,4 +18,6 @@ playwright-report/
 .impeccable/
 *.webm
 *.mp4
+!docs/clips/*.mp4
+!docs/mix/*.mp4
 *.zip

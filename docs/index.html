@@ -1,0 +1,837 @@
+<!doctype html>
+<!--
+THESIS: Review the recording, not a claim about it. One viewing monitor and an ordered program replace a marketing hero or card gallery.
+OWN-WORLD: Cool studio gray, paper-white controls, ink type, a dark media stage, and a restrained blue selection rule. Real frames supply the color.
+STORY: Select an example, play deliberately, inspect its result and caveats, then compare the supplied editorial mix with the full evidence.
+FIRST VIEWPORT: A compact collection header sits above a dominant player fitted to each recording's intrinsic dimensions, with 8:5 demo and 16:9 mix loading defaults; the twelve-item program sits alongside. Native controls remain immediate.
+FORM: Brief-pinned review desk, not a randomized concept. On small screens the monitor comes first, the program second, and detailed evidence follows. No autoplay or decorative motion.
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Watch twelve recorded CopilotKit and GitHub Copilot SDK interactions, connected through AG-UI. No account or backend required.">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline' file:; style-src 'unsafe-inline'; img-src 'self' file:; media-src 'self' file:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>CopilotKit + Copilot SDK demo gallery</title>
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: #20262b;
+      background: #e9edef;
+      --surface: #f8f9fa;
+      --paper: #fff;
+      --ink: #20262b;
+      --muted: #56626c;
+      --line: #cbd2d7;
+      --accent: #245879;
+      --selected: #e4eef5;
+      --pass: #285f46;
+      --partial: #79551b;
+      --fail: #963e3e;
+      --radius: 5px;
+    }
+    * { box-sizing: border-box; }
+    [hidden] { display: none !important; }
+    body { margin: 0; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    button { font: inherit; cursor: pointer; }
+    button:disabled { cursor: not-allowed; opacity: .5; }
+    a { color: var(--accent); text-underline-offset: 3px; text-decoration-thickness: 1px; }
+    a:hover { color: #133e59; }
+    :focus-visible { outline: 3px solid #24688f; outline-offset: 4px; }
+    h1, h2, h3, p { margin: 0; }
+    h1, h2, h3 { text-wrap: balance; }
+    h1 { font-size: clamp(1.3rem, 2.1vw, 1.8rem); font-weight: 650; line-height: 1.2; letter-spacing: -.025em; }
+    h2 { font-size: 1.45rem; line-height: 1.3; letter-spacing: -.02em; font-weight: 650; }
+    h3 { font-size: .95rem; line-height: 1.4; font-weight: 650; }
+    p, li, dd { line-height: 1.6; }
+    button, a, p, li, dd, h1, h2, h3 { overflow-wrap: anywhere; }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+    .skip-link { position: fixed; z-index: 10; left: 16px; top: -80px; padding: 12px 18px; background: var(--paper); border: 1px solid var(--ink); }
+    .skip-link:focus { top: 12px; }
+    .shell { max-width: 1720px; margin: 0 auto; padding: 28px 32px 24px; }
+    .masthead { display: flex; justify-content: space-between; align-items: center; gap: 24px; margin-bottom: 24px; }
+    .masthead p { margin-top: 6px; color: var(--muted); font-size: .875rem; }
+    .header-meta { flex: 0 0 auto; text-align: right; font-size: .8125rem; }
+    .header-meta time { display: block; color: var(--muted); margin-top: 8px; }
+    .manifest-alert { padding: 16px 20px; margin-bottom: 20px; border: 1px solid #bb9a60; border-radius: var(--radius); background: #faf3e5; color: #5f471f; }
+    .manifest-alert strong { display: block; margin-bottom: 3px; }
+    .manifest-alert p { font-size: .9rem; }
+    .review-layout { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 0 28px; align-items: start; }
+    .viewer { min-width: 0; grid-column: 1; grid-row: 1; }
+    .viewer-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; min-height: 44px; }
+    .mode-switch { display: inline-flex; gap: 3px; background: #d9e0e4; padding: 3px; border: 1px solid #c1cbd2; border-radius: 7px; }
+    .mode-switch button { border: 0; padding: 9px 16px; min-height: 38px; border-radius: 4px; background: transparent; color: #47545e; font-size: .875rem; font-weight: 600; }
+    .mode-switch button:hover { background: #e9edef; color: var(--ink); }
+    .mode-switch button[aria-pressed="true"] { background: var(--paper); color: var(--ink); box-shadow: 0 1px 2px #20262b1f; }
+    .toolbar-link { font-size: .8125rem; text-align: right; }
+    .selected-context { display: flex; align-items: flex-start; gap: 20px; margin-bottom: 14px; }
+    .current-insight { flex: 1; min-width: 0; max-width: 72ch; font-size: clamp(1.125rem, 1.5vw, 1.25rem); font-weight: 650; line-height: 1.4; color: var(--ink); }
+    .input-image { flex: 0 0 144px; max-width: 40%; margin: 0; }
+    .input-image a { display: block; }
+    .input-image img { display: block; width: 100%; height: auto; max-height: 112px; object-fit: contain; background: var(--paper); border: 1px solid var(--line); border-radius: 4px; }
+    .input-image figcaption { margin-top: 6px; font-size: .75rem; line-height: 1.4; overflow-wrap: anywhere; }
+    .input-image figcaption strong, .input-image figcaption span { display: block; }
+    .input-image-error { font-size: .8125rem; line-height: 1.4; }
+    .media-stage { position: relative; display: grid; aspect-ratio: 8 / 5; background: #15191c; color: #f0f3f5; overflow: hidden; border-radius: var(--radius) var(--radius) 0 0; }
+    .media-stage[data-mode="mix"] { aspect-ratio: 16 / 9; }
+    .media-stage:focus-within { outline: 3px solid #24688f; outline-offset: 4px; }
+    video { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: contain; background: #15191c; }
+    .stage-message { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 32px; gap: 12px; }
+    .stage-message h2 { font-size: 1.25rem; }
+    .stage-message p { max-width: 52ch; color: #bec9d1; font-size: .9rem; }
+    .stage-message .button { background: #f0f3f5; color: #20262b; border-color: #f0f3f5; margin-top: 6px; }
+    .stage-loading { position: absolute; top: 16px; left: 16px; pointer-events: none; color: #f8f9fa; background: #20262be6; border: 1px solid #78818a; border-radius: 3px; padding: 6px 10px; font-size: .8125rem; }
+    .transport { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; padding: 12px 14px; background: #f5f7f8; border: 1px solid var(--line); border-top: 0; border-radius: 0 0 var(--radius) var(--radius); }
+    .button { display: inline-flex; justify-content: center; align-items: center; gap: 8px; min-height: 42px; padding: 9px 13px; background: var(--paper); color: var(--ink); border: 1px solid #aebbc5; border-radius: 4px; font-size: .8125rem; font-weight: 600; text-decoration: none; }
+    .button:hover:not(:disabled) { border-color: #788c9a; background: #e9eef2; color: var(--ink); }
+    .button-primary { background: var(--ink); color: #fff; border-color: var(--ink); min-width: 146px; }
+    .button-primary:hover:not(:disabled) { background: #37464f; color: #fff; }
+    .transport-time { font-size: .8125rem; font-variant-numeric: tabular-nums; color: var(--muted); white-space: nowrap; }
+    .transport-links { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; margin-left: auto; }
+    .transport-links a { font-size: .8125rem; }
+    .now-playing { padding: 22px 0 0; }
+    .now-heading { display: flex; justify-content: space-between; gap: 16px; align-items: flex-start; }
+    .now-heading h2 { flex: 1; }
+    .sequence { color: var(--muted); font-size: .8125rem; font-variant-numeric: tabular-nums; white-space: nowrap; padding-top: 6px; }
+    .result-line { display: flex; align-items: baseline; flex-wrap: wrap; gap: 8px; margin: 10px 0 8px; }
+    .outcome { font-size: .8125rem; font-weight: 650; }
+    .outcome[data-status="pass"] { color: var(--pass); }
+    .outcome[data-status="partial"] { color: var(--partial); }
+    .outcome[data-status="fail"] { color: var(--fail); }
+    .outcome[data-status="pending"], .outcome[data-status="mix"] { color: var(--muted); }
+    .status-detail { font-size: .875rem; color: var(--muted); }
+    .current-summary { color: #485660; font-size: .9375rem; max-width: 72ch; }
+    .program { grid-column: 2; grid-row: 1 / span 2; padding: 0 0 0 22px; border-left: 1px solid #bfc9d0; min-width: 0; }
+    .program-header { padding: 1px 0 12px; }
+    .program-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+    .program-heading h2 { font-size: 1.0625rem; letter-spacing: -.01em; }
+    .program-heading span { font-size: .75rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+    .program-totals { color: #47555e; font-size: .75rem; margin-top: 8px; }
+    .program-hint { color: var(--muted); font-size: .75rem; margin-top: 5px; }
+    .program-list { list-style: none; padding: 4px; margin: 0 -4px; max-height: min(770px, 76vh); overflow-y: auto; scrollbar-width: thin; scrollbar-color: #98a7b2 transparent; overscroll-behavior: contain; }
+    .program-list li + li { margin-top: 4px; }
+    .demo-button { display: grid; grid-template-columns: 94px minmax(0, 1fr); gap: 12px; align-items: center; width: 100%; min-height: 88px; padding: 9px 8px; background: transparent; border: 1px solid transparent; border-radius: var(--radius); text-align: left; color: var(--ink); }
+    .demo-button:hover { background: #dfe6eb; }
+    .demo-button:focus-visible { outline-offset: -3px; }
+    .demo-button[aria-current="true"] { background: var(--selected); border-color: #6c92ae; }
+    .thumb { position: relative; display: grid; place-items: center; width: 94px; aspect-ratio: 8 / 5; align-self: center; background: #d0d9df; border-radius: 3px; overflow: hidden; color: #465762; }
+    .thumb img { position: absolute; width: 100%; height: 100%; object-fit: contain; }
+    .thumb-placeholder { font-size: .625rem; padding: 0 6px 12px; line-height: 1.2; text-align: center; }
+    .duration { position: absolute; bottom: 3px; right: 3px; background: #15191ceb; color: #fff; padding: 1px 4px; border-radius: 2px; font-size: .75rem; font-variant-numeric: tabular-nums; line-height: 1.4; }
+    .demo-copy { min-width: 0; }
+    .demo-title { display: block; font-size: .8125rem; line-height: 1.35; font-weight: 600; }
+    .demo-meta { display: flex; flex-wrap: wrap; column-gap: 9px; row-gap: 1px; margin-top: 5px; align-items: center; }
+    .demo-meta .outcome { font-size: .75rem; }
+    .selected-label { color: #245879; font-size: .75rem; font-weight: 600; visibility: hidden; }
+    .demo-button[aria-current="true"] .selected-label { visibility: visible; }
+    .program-footer { padding-top: 12px; border-top: 1px solid var(--line); margin-top: 12px; }
+    .program-footer p { font-size: .75rem; color: var(--muted); }
+    .previous-next { display: flex; gap: 8px; margin-top: 12px; }
+    .previous-next .button { flex: 1; font-weight: 500; }
+    .evidence { grid-column: 1; grid-row: 2; min-width: 0; margin-top: 24px; }
+    .evidence-section { padding: 20px 0; border-top: 1px solid var(--line); }
+    .evidence-section h3 { margin-bottom: 10px; }
+    .evidence-section p { font-size: .875rem; color: var(--muted); max-width: 72ch; }
+    .notes { margin: 0; padding-left: 20px; font-size: .875rem; }
+    .notes li + li { margin-top: 6px; }
+    .chapters { display: flex; flex-wrap: wrap; gap: 8px; }
+    .chapter { text-align: left; font-weight: 500; justify-content: flex-start; }
+    .chapter time { color: var(--accent); font-variant-numeric: tabular-nums; font-weight: 650; white-space: nowrap; }
+    .chapter[aria-current="true"] { background: var(--selected); border-color: #6c92ae; }
+    .chapter-hint { margin-bottom: 10px; }
+    details { border-top: 1px solid var(--line); }
+    summary { cursor: pointer; padding: 17px 0; min-height: 48px; font-size: .875rem; font-weight: 600; }
+    summary::marker { color: var(--muted); }
+    details > .details-body { padding: 0 0 20px 18px; }
+    .tool-evidence-section { margin-top: 20px; }
+    .tool-evidence-context { font-size: .875rem; max-width: 72ch; margin-bottom: 16px; }
+    .tool-call + .tool-call { border-top: 1px solid var(--line); padding-top: 18px; margin-top: 18px; }
+    .tool-call h3 { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; overflow-wrap: anywhere; }
+    .tool-call-timing { font-size: .8125rem; font-variant-numeric: tabular-nums; color: var(--muted); margin-top: 5px; }
+    .tool-field-label { margin: 14px 0 6px; font-size: .8125rem; font-weight: 650; }
+    .tool-evidence-code { margin: 0; padding: 12px; max-height: 24rem; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; background: var(--paper); color: var(--ink); border: 1px solid var(--line); border-radius: 4px; font: .875rem/1.55 ui-monospace, SFMono-Regular, Consolas, monospace; }
+    .prompts { margin: 0; padding-left: 20px; }
+    .prompts li { padding-left: 5px; font-size: .875rem; white-space: pre-wrap; }
+    .prompts li + li { margin-top: 12px; }
+    .known-limitations { scroll-margin-top: 20px; }
+    .known-limitations .details-body { padding-right: 16px; }
+    .known-limitations p { color: var(--muted); margin: 12px 0 0; font-size: .8125rem; }
+    .mix-sources { display: grid; gap: 8px; }
+    .mix-source { justify-content: space-between; text-align: left; width: 100%; font-weight: 500; }
+    .mix-source small { display: block; color: var(--muted); font-weight: 400; margin-top: 2px; }
+    .about { margin-top: 36px; padding-top: 28px; border-top: 1px solid #acbbc5; display: grid; grid-template-columns: minmax(0, 1fr) minmax(280px, .65fr); gap: 28px 60px; scroll-margin-top: 24px; }
+    .about h2 { font-size: 1.125rem; margin-bottom: 12px; }
+    .about h3 { margin-top: 20px; margin-bottom: 8px; }
+    .about p { color: var(--muted); font-size: .875rem; max-width: 70ch; }
+    .about p + p { margin-top: 10px; }
+    .about .sample-access-note { margin-top: 12px; font-size: .8125rem; }
+    .proposal-status { display: inline-block; color: var(--ink); font-weight: 650; }
+    .source-links { display: flex; gap: 20px; flex-wrap: wrap; margin-top: 16px; font-size: .875rem; }
+    .provider { margin: 0; display: grid; grid-template-columns: 100px minmax(0, 1fr); gap: 8px 16px; font-size: .8125rem; }
+    .provider dt { color: var(--muted); }
+    .provider dd { margin: 0; }
+    .provider-note { margin-top: 16px !important; font-size: .8125rem !important; }
+    .footer { display: flex; justify-content: space-between; gap: 20px; margin-top: 36px; padding-top: 16px; border-top: 1px solid var(--line); color: var(--muted); font-size: .75rem; }
+    @media (min-width: 1500px) { .review-layout { grid-template-columns: minmax(0, 1fr) 370px; gap: 0 36px; } .demo-button { grid-template-columns: 104px minmax(0, 1fr); } .thumb { width: 104px; } }
+    @media (max-width: 1100px) {
+      .shell { padding: 22px 22px; }
+      .review-layout { grid-template-columns: minmax(0, 1fr) 292px; gap: 0 20px; }
+      .program { padding-left: 16px; }
+      .demo-button { grid-template-columns: 78px minmax(0, 1fr); gap: 9px; padding: 8px 6px; }
+      .thumb { width: 78px; }
+      .transport-links { width: 100%; margin: 0; padding: 2px 0; }
+      .toolbar-link { max-width: 11ch; }
+      .mode-switch button { padding: 8px 11px; }
+    }
+    @media (max-width: 800px) {
+      .shell { padding: 20px 18px; }
+      .masthead { margin-bottom: 20px; align-items: flex-start; }
+      .header-meta time { max-width: 15ch; margin-left: auto; }
+      .review-layout { display: flex; flex-direction: column; gap: 0; }
+      .viewer, .program, .evidence { width: 100%; }
+      .viewer { order: 1; }
+      .program { order: 2; padding: 22px 0 0; border-left: 0; border-top: 1px solid var(--line); margin-top: 24px; }
+      .evidence { order: 3; margin-top: 24px; }
+      .program-list { max-height: 396px; }
+      .demo-button { grid-template-columns: 108px minmax(0, 1fr); gap: 14px; min-height: 86px; }
+      .thumb { width: 108px; }
+      .demo-title { font-size: .875rem; }
+      .demo-meta .outcome, .selected-label { font-size: .75rem; }
+      .toolbar-link { max-width: none; }
+      .transport-links { width: auto; margin-left: auto; }
+      .about { grid-template-columns: 1fr; gap: 26px; margin-top: 24px; }
+      .program-footer { display: flex; gap: 18px; justify-content: space-between; align-items: center; }
+      .program-footer p { max-width: 38ch; }
+      .previous-next { flex: 0 0 auto; margin: 0; }
+    }
+    @media (max-width: 480px) {
+      .shell { padding: 18px 12px; }
+      .masthead { gap: 14px; }
+      .masthead p { font-size: .75rem; max-width: 28ch; }
+      .header-meta { font-size: .75rem; max-width: 11ch; }
+      .header-meta time { display: none; }
+      .viewer-toolbar { gap: 8px; }
+      .mode-switch button { font-size: .8125rem; padding: 8px 10px; }
+      .toolbar-link { max-width: 10ch; font-size: .75rem; }
+      .selected-context { gap: 14px; }
+      .input-image { flex-basis: 120px; }
+      .stage-message { gap: 8px; padding: 16px; }
+      .stage-message h2 { font-size: 1rem; }
+      .stage-message p { font-size: .75rem; line-height: 1.4; }
+      .stage-message .button { min-height: 36px; margin-top: 0; padding: 7px 10px; }
+      .transport { padding: 10px; }
+      .transport-links { width: 100%; margin: 0; }
+      .now-playing { padding-top: 18px; }
+      .now-heading h2 { font-size: 1.25rem; }
+      .current-summary { font-size: .875rem; }
+      .program-footer { align-items: flex-start; flex-direction: column; gap: 12px; }
+      .previous-next { width: 100%; }
+      .footer { flex-direction: column; gap: 6px; }
+    }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; animation: none !important; transition: none !important; } }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#player">Skip to recording</a>
+  <main class="shell">
+    <header class="masthead">
+      <div>
+        <h1 id="collection-title">Agent demo review</h1>
+        <p id="setup-summary">Copilot SDK × AG-UI × CopilotKit</p>
+      </div>
+      <div class="header-meta">
+        <a href="#about-recording">Setup &amp; provenance</a>
+        <time id="created-date"></time>
+      </div>
+    </header>
+
+    <noscript><div class="manifest-alert"><strong>JavaScript is required to select recordings.</strong><p>Enable JavaScript and reopen this local page. The gallery reads the adjacent manifest.js file; no server is required.</p></div></noscript>
+    <div id="manifest-alert" class="manifest-alert" role="alert" hidden>
+      <strong id="manifest-alert-title"></strong>
+      <p id="manifest-alert-detail"></p>
+    </div>
+
+    <div class="review-layout">
+      <section class="viewer" aria-labelledby="current-title">
+        <div class="viewer-toolbar">
+          <div class="mode-switch" role="group" aria-label="Recording view">
+            <button id="mix-mode" type="button" aria-pressed="true">Highlight mix</button>
+            <button id="full-mode" type="button" aria-pressed="false">Full demos</button>
+          </div>
+          <a class="toolbar-link" href="#known-limitations" id="limitations-link">Known limitations</a>
+        </div>
+        <div id="selected-context" class="selected-context" hidden>
+          <p id="current-insight" class="current-insight" hidden></p>
+          <figure id="input-image-figure" class="input-image" hidden>
+            <a id="input-image-link" target="_blank" rel="noopener noreferrer" aria-label="Open actual uploaded input image at full size">
+              <img id="input-image" alt="" decoding="async">
+              <span id="input-image-error" class="input-image-error" role="status" hidden>Input image unavailable. Open the source file.</span>
+            </a>
+            <figcaption><strong>Actual uploaded input</strong><span id="input-image-label"></span></figcaption>
+          </figure>
+        </div>
+        <div class="media-stage" id="player" data-state="missing" tabindex="-1">
+          <video id="review-video" controls playsinline preload="metadata" aria-label="Selected Dojo recording" aria-describedby="current-insight current-summary" hidden>
+            Your browser does not support native video playback. Use the download link below to open the recording in a media player.
+          </video>
+          <div class="stage-message" id="stage-message">
+            <h2 id="stage-title">Preparing the review library</h2>
+            <p id="stage-detail">The recordings and their manifest have not been loaded yet.</p>
+            <button class="button" id="retry-media" type="button" hidden>Retry loading</button>
+          </div>
+          <p class="stage-loading" id="media-loading" role="status" hidden>Loading recording…</p>
+        </div>
+        <div class="transport">
+          <button id="play-pause" type="button" class="button button-primary" disabled>Play recording</button>
+          <span class="transport-time" id="clip-duration">Duration not supplied</span>
+          <div class="transport-links">
+            <a id="download-clip" download hidden>Download full clip</a>
+            <a id="download-silent" download hidden>Download silent mix</a>
+            <a id="download-raw" download hidden>Raw WebM (untrimmed)</a>
+          </div>
+        </div>
+        <div class="now-playing">
+          <div class="now-heading">
+            <h2 id="current-title">Select a recording</h2>
+            <span class="sequence" id="selection-sequence"></span>
+          </div>
+          <div class="result-line">
+            <span id="current-status" class="outcome" data-status="pending">Not ready</span>
+            <span id="status-detail" class="status-detail"></span>
+          </div>
+          <p id="current-summary" class="current-summary">The library will show the recording-specific result for each example.</p>
+        </div>
+        <details id="tool-evidence-section" class="tool-evidence-section" hidden>
+          <summary>Inspect recorded tool call</summary>
+          <div class="details-body">
+            <p class="tool-evidence-context"><strong>Recorded AG-UI evidence.</strong> Tool arguments and results captured during this recording, not model reasoning or a live inspector.</p>
+            <div id="tool-evidence"></div>
+          </div>
+        </details>
+      </section>
+
+      <aside class="program" aria-labelledby="program-title">
+        <div class="program-header">
+          <div class="program-heading">
+            <h2 id="program-title">Demo program</h2>
+            <span id="program-count">12 examples</span>
+          </div>
+          <p class="program-totals" id="program-totals">Awaiting recording results</p>
+          <p class="program-hint" id="program-hint">↑ ↓ to move focus · Enter to select</p>
+        </div>
+        <ol id="demo-list" class="program-list" aria-label="All twelve demo recordings" aria-describedby="program-hint"></ol>
+        <div class="program-footer">
+          <p id="program-context">Complete interactions at original speed. Raw captures and development evidence are not included.</p>
+          <div class="previous-next" role="group" aria-label="Browse full recordings">
+            <button id="previous-demo" class="button" type="button" disabled>← Previous</button>
+            <button id="next-demo" class="button" type="button" disabled>Next →</button>
+          </div>
+        </div>
+      </aside>
+
+      <div class="evidence">
+        <section class="evidence-section" id="chapter-section" aria-labelledby="chapter-heading" hidden>
+          <h3 id="chapter-heading">Chapters</h3>
+          <p class="chapter-hint">Jump to a moment. Seeking does not start playback.</p>
+          <div id="chapters" class="chapters"></div>
+        </section>
+        <section class="evidence-section" aria-labelledby="review-notes-heading">
+          <h3 id="review-notes-heading">Review notes</h3>
+          <ul id="review-notes" class="notes"></ul>
+          <p id="notes-empty">No recording-specific notes have been supplied yet.</p>
+        </section>
+        <section class="evidence-section" id="mix-sources-section" aria-labelledby="mix-sources-heading" hidden>
+          <h3 id="mix-sources-heading">Full recordings behind this mix</h3>
+          <div id="mix-sources" class="mix-sources"></div>
+        </section>
+        <details id="prompts-section" hidden>
+          <summary id="prompts-summary">Prompts used</summary>
+          <div class="details-body"><ol id="prompts" class="prompts"></ol></div>
+        </details>
+        <details id="known-limitations" class="known-limitations">
+          <summary>About these recordings</summary>
+          <div class="details-body">
+            <ul class="notes">
+              <li>These are selected successful takes, not a guarantee that every model run succeeds.</li>
+              <li>An earlier human-approval take failed with malformed tool arguments. The gallery uses a different verified take with a five-second initial trim.</li>
+              <li>Reasoning summaries depend on the provider and run; their appearance is optional.</li>
+              <li>Tools and business data are synthetic. No real invitations or bookings are made.</li>
+              <li>Local, on-premises and Microsoft Foundry Hosted Agents are hosting options, not three deployments demonstrated here. Fully disconnected operation is unverified.</li>
+            </ul>
+          </div>
+        </details>
+      </div>
+    </div>
+
+    <section class="about" id="about-recording" aria-labelledby="about-title">
+      <div>
+        <h2 id="about-title">Create your own agent</h2>
+        <a id="sample-application-link" class="button button-primary" href="https://github.com/ArlindNocaj/copilot-sdk-ag-ui-frontend-demo" target="_blank" rel="noopener noreferrer" aria-describedby="sample-access-note">Sample application ↗</a>
+        <p id="sample-access-note" class="sample-access-note">Public sample application. Watching these recordings needs no account or setup.</p>
+        <h3 id="technical-provenance">Technical provenance</h3>
+        <p><span class="proposal-status">Custom integration proposal</span> — a fork-based adapter, not official upstream integration or a production-readiness claim.</p>
+        <p>The full demos and the supplied highlight mix are separate review assets. This page plays existing files; it does not edit footage or render a new mix.</p>
+        <div class="source-links">
+          <a href="https://github.com/ArlindNocaj/ag-ui/tree/main" target="_blank" rel="noopener noreferrer">Current integration fork · main ↗</a>
+          <a href="https://github.com/ag-ui-protocol/ag-ui/issues/2887" target="_blank" rel="noopener noreferrer">Upstream integration tracker · ag-ui-protocol/ag-ui#2887 ↗</a>
+          <a href="https://github.com/ArlindNocaj/ag-ui/tree/feature/add-copilot-sdk-support" target="_blank" rel="noopener noreferrer">Original recorded integration branch ↗</a>
+          <a href="https://github.com/ArlindNocaj/ag-ui/pull/1" target="_blank" rel="noopener noreferrer">Merged fork PR · ArlindNocaj/ag-ui#1 ↗</a>
+        </div>
+        <div id="recording-notes-section" hidden>
+          <h3>Recording notes</h3>
+          <ul id="recording-notes" class="notes"></ul>
+        </div>
+      </div>
+      <div>
+        <h2>Recorded setup</h2>
+        <dl class="provider">
+          <dt>Backend</dt><dd id="provider-backend">Awaiting manifest</dd>
+          <dt>Frontend</dt><dd id="provider-frontend">Awaiting manifest</dd>
+          <dt>Model</dt><dd id="provider-model">Awaiting manifest</dd>
+          <dt>Host</dt><dd id="provider-host">Awaiting manifest</dd>
+          <dt>Authentication</dt><dd id="provider-authentication">Awaiting manifest</dd>
+        </dl>
+        <p class="provider-note">Custom live Foundry setup; not included in the public integration branch. Private endpoints and account details are intentionally not shown.</p>
+      </div>
+    </section>
+    <footer class="footer">
+      <span>Recorded demos · No tracking · No autoplay</span>
+      <span id="footer-count">Results come from the recording manifest</span>
+    </footer>
+    <p class="sr-only" id="announcement" role="status" aria-live="polite" aria-atomic="true"></p>
+  </main>
+
+  <script src="./manifest.js"></script>
+  <script id="gallery-logic">
+    "use strict";
+    window.DojoGallery = (() => {
+      const examples = [
+        ["agentic_chat", "Agentic chat"],
+        ["backend_tool_rendering", "Backend tool rendering"],
+        ["human_in_the_loop", "Human in the loop"],
+        ["tool_based_generative_ui", "Tool-based generative UI"],
+        ["shared_state", "Shared state"],
+        ["agentic_generative_ui", "Agentic generative UI"],
+        ["predictive_state_updates", "Predictive state updates"],
+        ["agentic_chat_reasoning", "A recommendation you can understand"],
+        ["agentic_chat_multimodal", "Agentic chat multimodal"],
+        ["interrupt", "Interrupt"],
+        ["deepagents_subagents", "Deep Agents subagents"],
+        ["subgraphs", "Subgraphs"]
+      ];
+      const statusNames = { pass: "Pass", partial: "Partial", fail: "Fail", pending: "Not reviewed", mix: "Edited compilation" };
+      const text = (value, fallback = "") => typeof value === "string" && value.trim() ? value.trim() : fallback;
+      const strings = value => Array.isArray(value) ? value.filter(item => typeof item === "string" && item.trim()).map(item => item.trim()) : [];
+      const seconds = value => typeof value === "number" && Number.isFinite(value) && value >= 0 ? value : null;
+      const frameRatio = (width, height) => Number.isFinite(width) && width > 0 && Number.isFinite(height) && height > 0 ? `${width} / ${height}` : "";
+      function clock(value) {
+        if (seconds(value) === null) return "—";
+        const total = Math.floor(value);
+        const hours = Math.floor(total / 3600);
+        return `${hours ? `${hours}:` : ""}${hours ? String(Math.floor(total / 60) % 60).padStart(2, "0") : Math.floor(total / 60)}:${String(total % 60).padStart(2, "0")}`;
+      }
+      function localAsset(value) {
+        if (typeof value !== "string") return "";
+        const path = value.trim().replace(/^\.\//, "");
+        if (!/^(clips|raw|posters|mix|assets)\/[a-zA-Z0-9_./ -]+$/.test(path)) return "";
+        return path.split("/").some(part => part === ".." || part === "." || !part) ? "" : path;
+      }
+      function chapters(value, duration) {
+        if (!Array.isArray(value)) return [];
+        return value.filter(item => item && seconds(item.time) !== null && text(item.label) && (duration === null || item.time <= duration))
+          .map(item => ({ time: item.time, label: item.label.trim() })).sort((a, b) => a.time - b.time);
+      }
+      function recordedValue(value) {
+        if (typeof value === "string") return value;
+        try { return JSON.stringify(value, null, 2) ?? "Not supplied in the recorded evidence."; }
+        catch (error) { return `Unable to display this recorded value: ${error.message}`; }
+      }
+      function collection(manifest) {
+        const valid = !!manifest && typeof manifest === "object" && Array.isArray(manifest.demos);
+        const records = valid ? manifest.demos : [];
+        const demos = examples.map(([id, title]) => {
+          const record = records.find(item => item && item.id === id);
+          const data = record || {};
+          const duration = seconds(data.duration);
+          const image = data.inputImage || {};
+          const imageSrc = localAsset(image.src);
+          return {
+            id, supplied: !!record, title: text(data.title, title),
+            summary: text(data.summary, record ? "No description supplied for this recording." : "This recording has not been added to the local collection yet."),
+            insight: text(data.insight),
+            inputImage: imageSrc ? { src: imageSrc, alt: text(image.alt, "Actual image uploaded in this recording"), label: text(image.label) } : null,
+            status: ["pass", "partial", "fail"].includes(data.status) ? data.status : "pending",
+            statusLabel: text(data.statusLabel, record ? "" : "Awaiting recording"),
+            notes: strings(data.notes), prompts: strings(data.prompts),
+            src: localAsset(data.src), raw: localAsset(data.raw), poster: localAsset(data.poster),
+            duration, chapters: chapters(data.chapters, duration),
+            toolEvidence: Array.isArray(data.toolEvidence) ? data.toolEvidence.filter(call => call && typeof call === "object" && !Array.isArray(call)).map(call => ({
+              name: text(call.name, "Unnamed recorded tool"),
+              arguments: recordedValue(call.arguments), result: recordedValue(call.result),
+              startedAtSeconds: seconds(call.startedAtSeconds), finishedAtSeconds: seconds(call.finishedAtSeconds)
+            })) : []
+          };
+        });
+        const counts = { pass: 0, partial: 0, fail: 0, pending: 0, supplied: 0, clips: 0 };
+        for (const demo of demos) {
+          counts[demo.status]++;
+          if (demo.supplied) counts.supplied++;
+          if (demo.src) counts.clips++;
+        }
+        const data = valid && manifest.mix && typeof manifest.mix === "object" ? manifest.mix : {};
+        const duration = seconds(data.duration);
+        const mix = {
+          id: "mix", title: text(data.title, "Highlight mix"),
+          summary: "Selected excerpts with an original local instrumental. Full recordings are silent; return to Full demos for complete interactions, outcomes, and limitations.",
+          insight: "", inputImage: null, toolEvidence: [],
+          status: "mix", statusLabel: "Selected excerpts, not the complete evidence",
+          src: localAsset(data.src), silentSrc: localAsset(data.silentSrc), poster: localAsset(data.poster), duration,
+          notes: strings(data.notes), prompts: [], chapters: chapters(data.chapters, duration), raw: "",
+          cuts: Array.isArray(data.cuts) ? data.cuts.filter(cut => cut && examples.some(([id]) => id === cut.feature)).map(cut => ({ feature: cut.feature, label: text(cut.label) })) : []
+        };
+        return { valid, demos, counts, mix };
+      }
+      return { examples, statusNames, text, strings, seconds, frameRatio, clock, localAsset, chapters, recordedValue, collection };
+    })();
+  </script>
+  <script id="gallery-ui">
+    "use strict";
+    (() => {
+      const { text, strings, frameRatio, clock, statusNames, collection } = window.DojoGallery;
+      const manifest = window.DOJO_MEDIA;
+      const library = collection(manifest);
+      const $ = id => document.getElementById(id);
+      const video = $("review-video");
+      const list = $("demo-list");
+      const demoButtons = [];
+      let selectedIndex = 0;
+      let mode = "mix";
+      let current = library.mix;
+      let pendingSeek = null;
+      let chapterButtons = [];
+
+      function node(tag, className, content) {
+        const element = document.createElement(tag);
+        if (className) element.className = className;
+        if (content !== undefined) element.textContent = content;
+        return element;
+      }
+      function fillList(id, items) {
+        $(id).replaceChildren(...items.map(item => node("li", "", item)));
+      }
+      function alertMessage(title, detail) {
+        $("manifest-alert-title").textContent = title;
+        $("manifest-alert-detail").textContent = detail;
+        $("manifest-alert").hidden = false;
+      }
+      function setLink(id, path, label) {
+        const link = $(id);
+        link.hidden = !path;
+        if (path) link.setAttribute("href", path);
+        else link.removeAttribute("href");
+        if (label) link.textContent = label;
+      }
+      function announce(message) { $("announcement").textContent = message; }
+      function showStage(title, detail, retry = false) {
+        $("player").dataset.state = retry ? "error" : "missing";
+        $("stage-title").textContent = title;
+        $("stage-detail").textContent = detail;
+        $("stage-message").hidden = false;
+        $("retry-media").hidden = !retry;
+        $("media-loading").hidden = true;
+        video.hidden = true;
+      }
+      function select(index, nextMode = "full", notify = true) {
+        video.pause();
+        pendingSeek = null;
+        mode = nextMode;
+        $("player").dataset.mode = mode;
+        $("player").style.aspectRatio = "";
+        selectedIndex = index;
+        current = mode === "mix" ? library.mix : library.demos[index];
+        $("player").dataset.mediaId = current.id;
+        $("full-mode").setAttribute("aria-pressed", String(mode === "full"));
+        $("mix-mode").setAttribute("aria-pressed", String(mode === "mix"));
+        $("program-context").textContent = mode === "mix"
+          ? "Highlight mix active. Select any demo above to return to its full recording."
+          : "Complete interactions at original speed. Raw captures and development evidence are not included.";
+        demoButtons.forEach((button, i) => {
+          if (mode === "full" && i === index) button.setAttribute("aria-current", "true");
+          else button.removeAttribute("aria-current");
+        });
+        $("current-title").textContent = current.title;
+        $("current-summary").textContent = current.summary;
+        $("current-insight").textContent = current.insight;
+        $("current-insight").hidden = !current.insight;
+        $("current-status").textContent = !current.supplied && mode === "full" ? "Not ready" : statusNames[current.status];
+        $("current-status").dataset.status = current.status;
+        $("status-detail").textContent = current.statusLabel.toLowerCase() === statusNames[current.status].toLowerCase() ? "" : current.statusLabel;
+        $("selection-sequence").textContent = mode === "mix" ? "Highlight mix" : `${String(index + 1).padStart(2, "0")} / ${library.demos.length}`;
+        $("clip-duration").textContent = current.duration === null ? "Duration not supplied" : `${clock(current.duration)} total`;
+        $("previous-demo").disabled = mode === "mix" || index === 0;
+        $("next-demo").disabled = mode === "mix" || index === library.demos.length - 1;
+        $("play-pause").disabled = !current.src;
+        $("play-pause").textContent = "Play recording";
+        setLink("download-clip", current.src, mode === "mix" ? "Download mix" : "Download full clip");
+        setLink("download-silent", mode === "mix" ? current.silentSrc : "");
+        setLink("download-raw", current.raw);
+        fillList("review-notes", current.notes);
+        $("notes-empty").hidden = current.notes.length > 0;
+        fillList("prompts", current.prompts);
+        $("prompts-section").hidden = !current.prompts.length;
+        $("prompts-summary").textContent = `Prompts used (${current.prompts.length})`;
+        $("prompts-section").open = false;
+        renderInputImage();
+        renderToolEvidence();
+        renderChapters();
+        renderMixSources();
+        video.removeAttribute("src");
+        video.removeAttribute("poster");
+        video.setAttribute("aria-label", `${current.title} — ${mode === "mix" ? "highlight mix" : "full recording"}`);
+        if (current.poster) video.setAttribute("poster", current.poster);
+        if (current.src) {
+          video.hidden = false;
+          $("player").dataset.state = "loading";
+          $("stage-message").hidden = true;
+          $("stage-title").textContent = "";
+          $("stage-detail").textContent = "";
+          $("retry-media").hidden = true;
+          $("media-loading").hidden = false;
+          video.setAttribute("src", current.src);
+          video.load();
+        } else {
+          video.load();
+          showStage(mode === "mix" ? "Highlight mix not ready" : "Recording not ready",
+            library.valid
+              ? "No local video file is listed for this selection. Add its relative media path to manifest.js, then reload this page."
+              : "The media manifest is missing or invalid. Keep manifest.js beside index.html, then reload this page.");
+        }
+        if (notify) announce(`${current.title} selected. ${$("current-status").textContent}. ${current.src ? "Playback is paused." : "Recording not ready."}`);
+      }
+      function renderInputImage() {
+        const image = current.inputImage;
+        const element = $("input-image");
+        $("selected-context").hidden = !current.insight && !image;
+        $("input-image-figure").hidden = !image;
+        $("input-image-error").hidden = true;
+        element.hidden = false;
+        element.alt = image ? image.alt : "";
+        $("input-image-label").textContent = image ? image.label : "";
+        setLink("input-image-link", image ? image.src : "");
+        if (image) element.setAttribute("src", image.src);
+        else element.removeAttribute("src");
+      }
+      function renderToolEvidence() {
+        const calls = current.toolEvidence.map((call, index) => {
+          const section = node("section", "tool-call");
+          section.dataset.toolIndex = String(index);
+          section.dataset.toolName = call.name;
+          const heading = node("h3", "", call.name);
+          heading.id = `tool-evidence-name-${index}`;
+          section.setAttribute("aria-labelledby", heading.id);
+          const timing = [];
+          if (call.startedAtSeconds !== null) timing.push(`Started ${clock(call.startedAtSeconds)}`);
+          if (call.finishedAtSeconds !== null) timing.push(`Finished ${clock(call.finishedAtSeconds)}`);
+          section.append(heading, node("p", "tool-call-timing", timing.length ? timing.join(" · ") : "Timing not supplied"));
+          for (const [field, label] of [["arguments", "Arguments"], ["result", "Result"]]) {
+            const value = node("pre", "tool-evidence-code", call[field]);
+            value.dataset.field = field;
+            value.tabIndex = 0;
+            value.setAttribute("role", "region");
+            value.setAttribute("aria-label", `Recorded ${label.toLowerCase()} for ${call.name}, call ${index + 1}`);
+            section.append(node("h4", "tool-field-label", label), value);
+          }
+          return section;
+        });
+        $("tool-evidence").replaceChildren(...calls);
+        $("tool-evidence-section").hidden = !calls.length;
+        $("tool-evidence-section").open = false;
+      }
+      function renderChapters() {
+        chapterButtons = current.chapters.map(chapter => {
+          const button = node("button", "button chapter");
+          button.type = "button";
+          const timestamp = node("time", "", clock(chapter.time));
+          timestamp.dateTime = `PT${chapter.time}S`;
+          button.append(timestamp, node("span", "", chapter.label));
+          button.setAttribute("aria-label", `Seek to ${chapter.label}, ${clock(chapter.time)}`);
+          button.disabled = !current.src;
+          button.addEventListener("click", () => {
+            video.pause();
+            if (video.readyState >= 1) seek(chapter.time);
+            else {
+              pendingSeek = chapter.time;
+              announce("Waiting for video metadata before seeking.");
+            }
+          });
+          return { button, time: chapter.time };
+        });
+        $("chapters").replaceChildren(...chapterButtons.map(item => item.button));
+        $("chapter-section").hidden = !chapterButtons.length;
+      }
+      function seek(time) {
+        const end = Number.isFinite(video.duration) ? video.duration : time;
+        try {
+          video.currentTime = Math.min(time, end);
+          announce(`Paused at ${clock(video.currentTime)}.`);
+        } catch {
+          announce("This recording cannot seek yet. Try again after it finishes loading.");
+        }
+      }
+      function renderMixSources() {
+        const sources = mode === "mix" ? library.mix.cuts : [];
+        const used = new Set();
+        const buttons = [];
+        for (const cut of sources) {
+          if (used.has(cut.feature)) continue;
+          used.add(cut.feature);
+          const index = library.demos.findIndex(demo => demo.id === cut.feature);
+          const demo = library.demos[index];
+          const button = node("button", "button mix-source");
+          button.type = "button";
+          const label = node("span", "", demo.title);
+          if (cut.label) label.append(node("small", "", cut.label));
+          const arrow = node("span", "", "↗");
+          arrow.setAttribute("aria-hidden", "true");
+          button.append(label, arrow);
+          button.setAttribute("aria-label", `Open full recording: ${demo.title}`);
+          button.addEventListener("click", () => { select(index); $("play-pause").focus(); });
+          buttons.push(button);
+        }
+        $("mix-sources").replaceChildren(...buttons);
+        $("mix-sources-section").hidden = !buttons.length;
+      }
+
+      for (const [index, demo] of library.demos.entries()) {
+        const item = node("li");
+        const button = node("button", "demo-button");
+        button.type = "button";
+        button.dataset.demoId = demo.id;
+        const outcome = demo.supplied ? statusNames[demo.status] : "Not ready";
+        button.setAttribute("aria-label", `${index + 1}. ${demo.title}. ${outcome}${demo.statusLabel ? `: ${demo.statusLabel}` : ""}. ${demo.duration === null ? "Duration not supplied" : `${clock(demo.duration)} duration`}${demo.src ? "" : ". Clip not ready"}.`);
+        const thumb = node("span", "thumb");
+        const fallback = node("span", "thumb-placeholder", demo.src ? "No poster supplied" : "Awaiting capture");
+        thumb.append(fallback);
+        if (demo.poster) {
+          const image = node("img");
+          image.alt = "";
+          image.loading = "lazy";
+          image.decoding = "async";
+          image.addEventListener("error", () => { image.hidden = true; fallback.textContent = "Poster unavailable"; });
+          image.src = demo.poster;
+          thumb.append(image);
+        }
+        thumb.append(node("span", "duration", clock(demo.duration)));
+        const copy = node("span", "demo-copy");
+        copy.append(node("span", "demo-title", demo.title));
+        const meta = node("span", "demo-meta");
+        const status = node("span", "outcome", outcome);
+        status.dataset.status = demo.status;
+        const selected = node("span", "selected-label", "Selected");
+        selected.setAttribute("aria-hidden", "true");
+        meta.append(status, selected);
+        copy.append(meta);
+        button.append(thumb, copy);
+        button.addEventListener("click", () => select(index));
+        item.append(button);
+        list.append(item);
+        demoButtons.push(button);
+      }
+      list.addEventListener("keydown", event => {
+        const index = demoButtons.indexOf(document.activeElement);
+        if (index < 0) return;
+        const next = { ArrowDown: Math.min(index + 1, demoButtons.length - 1), ArrowUp: Math.max(index - 1, 0), Home: 0, End: demoButtons.length - 1 }[event.key];
+        if (next !== undefined) { event.preventDefault(); demoButtons[next].focus(); }
+      });
+      $("input-image").addEventListener("error", () => {
+        if (!current.inputImage) return;
+        $("input-image").hidden = true;
+        $("input-image-error").hidden = false;
+      });
+      $("input-image").addEventListener("load", () => {
+        if (!current.inputImage) return;
+        $("input-image").hidden = false;
+        $("input-image-error").hidden = true;
+      });
+      $("full-mode").addEventListener("click", () => { if (mode !== "full") select(selectedIndex); });
+      $("mix-mode").addEventListener("click", () => { if (mode !== "mix") select(selectedIndex, "mix"); });
+      $("previous-demo").addEventListener("click", () => { if (selectedIndex > 0) select(selectedIndex - 1); });
+      $("next-demo").addEventListener("click", () => { if (selectedIndex < library.demos.length - 1) select(selectedIndex + 1); });
+      $("limitations-link").addEventListener("click", () => { $("known-limitations").open = true; });
+      $("retry-media").addEventListener("click", () => select(selectedIndex, mode));
+      $("play-pause").addEventListener("click", async () => {
+        if (!current.src) return;
+        if (!video.paused) { video.pause(); return; }
+        const requestedSource = current.src;
+        try { await video.play(); }
+        catch (error) {
+          if (current.src !== requestedSource || error.name === "AbortError") return;
+          announce("Playback could not start. Try the native controls, retry loading, or download this recording.");
+          if (video.error) showStage("Recording could not be opened", `Check that ${current.src} exists beside this page in its media folder. You can also use the download link below.`, true);
+        }
+      });
+      function playbackState() {
+        $("play-pause").textContent = video.ended ? "Play again" : video.paused ? "Play recording" : "Pause recording";
+      }
+      video.addEventListener("play", playbackState);
+      video.addEventListener("pause", playbackState);
+      video.addEventListener("ended", playbackState);
+      video.addEventListener("playing", () => { $("media-loading").hidden = true; });
+      video.addEventListener("waiting", () => { if (current.src && !video.hidden) $("media-loading").hidden = false; });
+      video.addEventListener("canplay", () => { $("media-loading").hidden = true; });
+      video.addEventListener("loadedmetadata", () => {
+        $("player").dataset.state = "ready";
+        $("media-loading").hidden = true;
+        $("player").style.aspectRatio = frameRatio(video.videoWidth, video.videoHeight);
+        if (Number.isFinite(video.duration)) $("clip-duration").textContent = `${clock(video.duration)} total`;
+        if (pendingSeek !== null) { const time = pendingSeek; pendingSeek = null; seek(time); }
+      });
+      video.addEventListener("error", () => {
+        if (!current.src || !video.getAttribute("src")) return;
+        $("play-pause").disabled = true;
+        showStage("Recording could not be opened", `Check that ${current.src} exists beside this page in its media folder. Retry loading, or use the download link below.`, true);
+        announce("Recording could not be opened. Retry loading or use the download link.");
+      });
+      video.addEventListener("timeupdate", () => {
+        const active = chapterButtons.findLastIndex(chapter => chapter.time <= video.currentTime);
+        chapterButtons.forEach((chapter, index) => {
+          if (index === active) chapter.button.setAttribute("aria-current", "true");
+          else chapter.button.removeAttribute("aria-current");
+        });
+      });
+
+      const { counts } = library;
+      $("program-count").textContent = `${counts.clips} / 12 clips listed`;
+      $("program-totals").textContent = `${counts.pass} pass · ${counts.partial} partial · ${counts.fail} fail${counts.pending ? ` · ${counts.pending} not reviewed` : ""}`;
+      $("footer-count").textContent = `Manifest results: ${counts.pass + counts.partial + counts.fail} / 12 reviewed`;
+      if (!library.valid) {
+        alertMessage("Review library not ready", "manifest.js is missing, could not be read, or does not contain a demos array. Keep it beside this page and reload after the recordings are prepared. No passing results have been assumed.");
+      } else if (counts.supplied < 12 || counts.clips < 12) {
+        alertMessage("The recording library is incomplete", `${counts.supplied} of 12 demo entries and ${counts.clips} local clip paths are supplied. Missing recordings show a not-ready player; available clips can still be reviewed.`);
+      }
+      if (library.valid) {
+        const title = text(manifest.title, "Agent demo review");
+        $("collection-title").textContent = title;
+        document.title = `${title}`;
+        const date = new Date(manifest.createdAt);
+        if (manifest.createdAt && !Number.isNaN(date.getTime())) {
+          $("created-date").dateTime = date.toISOString();
+          $("created-date").textContent = `Prepared ${new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "Europe/Zurich" }).format(date)}`;
+        }
+        const provider = manifest.provider || {};
+        for (const field of ["backend", "frontend", "model"]) $(`provider-${field}`).textContent = text(provider[field], "Not specified in manifest");
+        $("provider-host").textContent = text(provider.host).toLowerCase() === "foundry" ? "Foundry" : "Custom host (not disclosed)";
+        $("provider-authentication").textContent = text(provider.authentication).toLowerCase() === "entra" ? "Entra" : "Not specified";
+        $("setup-summary").textContent = `${text(provider.backend, "Backend not specified")} · ${text(provider.model, "Model not specified")} · ${$("provider-host").textContent}`;
+        const notes = strings(manifest.recordingNotes);
+        fillList("recording-notes", notes);
+        $("recording-notes-section").hidden = !notes.length;
+      }
+      selectedIndex = Math.max(0, library.demos.findIndex(demo => demo.src));
+      select(selectedIndex, "mix", false);
+    })();
+  </script>
+</body>
+</html>

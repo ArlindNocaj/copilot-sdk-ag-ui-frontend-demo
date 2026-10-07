@@ -48,7 +48,7 @@ flowchart LR
   UI["CopilotKit frontend · Next.js :3310"] --> Proxy["Next.js runtime proxy"]
   Proxy -->|"AG-UI HTTP / SSE"| PY["Python adapter :8227"]
   Proxy -->|"AG-UI HTTP / SSE"| TS["TypeScript adapter :8228"]
-  PY --> Runtime["GitHub Copilot SDK 1.0.14 / Copilot runtime"]
+  PY --> Runtime["GitHub Copilot SDK / Copilot runtime"]
   TS --> Runtime
   Runtime --> Live["Logged-in Copilot model"]
   Runtime -->|"BYOK · test mode only"| Mock["Local aimock OpenAI-compatible fixtures :5567"]

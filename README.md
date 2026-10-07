@@ -2,7 +2,7 @@
 
 **Build your own Cowork-style agent experience: GitHub Copilot's agent runtime behind an interactive app, not just a chat box.**
 
-▶ **See it in action:** [2:50 highlight video](https://github.com/ArlindNocaj/copilot-sdk-ag-ui-frontend-demo/releases/download/gallery-v10/highlights-v10.mp4) · [full gallery with all 12 clips](https://github.com/ArlindNocaj/copilot-sdk-ag-ui-frontend-demo/releases/tag/gallery-v10) (download the ZIP, open `index.html`; no setup needed)
+▶ **[Watch the gallery in your browser](https://arlindnocaj.github.io/copilot-sdk-ag-ui-frontend-demo/)** — a 2:50 highlight and all 12 demos. No download, login or setup. [Offline downloads](https://github.com/ArlindNocaj/copilot-sdk-ag-ui-frontend-demo/releases/tag/gallery-v10) are optional.
 
 ## Why use it
 
@@ -11,7 +11,18 @@
 
 ## How it works
 
-![CopilotKit frontend exchanging chat, tool, state and approval events through AG-UI with a GitHub Copilot SDK backend.](docs/assets/agent-architecture.svg)
+The same UI works with either backend; the quickstart below uses Python.
+
+```mermaid
+flowchart LR
+  UI["CopilotKit frontend · Next.js :3310"] --> Proxy["Next.js runtime proxy"]
+  Proxy -->|"AG-UI HTTP / SSE"| PY["Python adapter :8227"]
+  Proxy -->|"AG-UI HTTP / SSE"| TS["TypeScript adapter :8228"]
+  PY --> Runtime["GitHub Copilot SDK / Copilot runtime"]
+  TS --> Runtime
+  Runtime --> Live["Logged-in Copilot model"]
+  Runtime -->|"BYOK · test mode only"| Mock["Local aimock OpenAI-compatible fixtures :5567"]
+```
 
 1. **You ask, click or edit** in the React app built with CopilotKit.
 2. **The backend runs the agent** with GitHub Copilot SDK: the model plus the tools you register.
