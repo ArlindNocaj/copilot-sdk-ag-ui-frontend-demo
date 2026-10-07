@@ -16,7 +16,7 @@ Configuration, example catalog, recorded checks, and operating limits for the st
 
 ## Run modes and environment
 
-The root [quick start](../README.md#get-started) covers installation and Copilot login. `corepack enable` can enable pnpm if needed; uv **0.9.29** was used during development. The SDK starts its own native runtime; it does not shell out to a chat transcript or fake tool execution.
+The root [quick start](../README.md#get-started) covers installation with the Copilot SDK. `corepack enable` can enable pnpm if needed; uv **0.9.29** was used during development. The SDK starts its own native runtime; it does not shell out to a chat transcript or fake tool execution.
 
 Choose one live backend:
 

@@ -2,16 +2,19 @@
 
 **Build your own Cowork-style agent experience: GitHub Copilot's agent runtime behind an interactive app, not just a chat box.**
 
+## Why use it
+
+- **A battle-tested, production-ready harness under your control.** GitHub Copilot SDK exposes the [Copilot runtime used by Copilot Cowork and Microsoft 365 apps](https://github.blog/ai-and-ml/generative-ai/migrating-the-github-copilot-runtime-to-rust-using-copilot/), so you can build your own Cowork-style experience.
+- **Rich UI from CopilotKit, powered by that harness.** Build cards, charts, editable proposals, shared app state and approval controls. AG-UI connects these frontend interactions to the agent running in your backend.
+- **You don't build the agent runtime.** GitHub Copilot SDK provides the agent loop and orchestrates model and tool calls. You own the app code and choose its tools, integrations and hosting.
+
 ▶ **[Watch the gallery in your browser](https://arlindnocaj.github.io/copilot-sdk-ag-ui-frontend-demo/)** — a 2:50 highlight and all 12 demos. No download, login or setup. [Offline downloads](https://github.com/ArlindNocaj/copilot-sdk-ag-ui-frontend-demo/releases/tag/gallery-v10) are optional.
 
 [![Open the live CopilotKit and GitHub Copilot SDK demo gallery](docs/posters/highlights-v10.jpg)](https://arlindnocaj.github.io/copilot-sdk-ag-ui-frontend-demo/)
 
-## Why use it
-
-- **The agent works inside your UI.** It can show results as cards, charts and editable proposals, read and update shared app state, and pause for your approval before acting.
-- **You don't build the agent runtime.** GitHub Copilot SDK runs the agent loop, model and tools. You own the app code and choose its tools, integrations and hosting.
-
 ## How it works
+
+![Architecture illustration: a CopilotKit frontend connects through AG-UI to a Python Copilot SDK backend, model and tools. Hosting options include an all-local offline stack or Microsoft Foundry Hosted Agents with VM-isolated sessions and a persistent filesystem per session.](docs/assets/cowork-architecture.png)
 
 The same UI works with either backend; the quickstart below uses Python.
 
@@ -32,7 +35,7 @@ flowchart LR
 
 ## Get started
 
-You need Node 24.13+, pnpm 10.33.4, Python 3.11+, [uv](https://docs.astral.sh/uv/) and the [Copilot CLI](https://docs.github.com/en/copilot/how-tos/copilot-cli/install-copilot-cli), signed in (run `copilot`, then `/login`) with a Copilot plan that includes model access.
+You need Node 24.13+, pnpm 10.33.4, Python 3.11+ and [uv](https://docs.astral.sh/uv/). The commands below install the [GitHub Copilot SDK](https://github.com/github/copilot-sdk). Default live mode requires [Copilot authentication](docs/reference.md#troubleshooting) and a plan that includes model access.
 
 ```sh
 git clone https://github.com/ArlindNocaj/copilot-sdk-ag-ui-frontend-demo.git
